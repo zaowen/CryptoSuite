@@ -199,7 +199,12 @@ Prove the following theorem \\
 \pagebreak
 
 \begin{homeworkProblem}
-Question 27 in the book.
+Alice designs a cryptosystem as follows (this system is due to Rabin). She chooses two distinct primes $p$ and $q$ (preferably, both $p$ and $q$ are congruent to 3 mod 4) and keeps them secret. She makes $n = pq$ public. When Bob wants to send Alice a message $m$, he computes $x \equiv m^2 \pmod n$ and sends $x$ to Alice. She makes a decryption machine that does the following: When the machine is given a number $x$ , it computes the square roots of $x \mod n$ since it knows $p$ and $q$. There is usually more than one square root. It chooses one at random, and gives it to Alice. When Alice receives $x$ from Bob, she puts it into her machine. If the output from the machine is a meaningful message, she assumes it is the correct message. If it is not meaningful, she puts $x$ into the machine again. She continues until she gets a meaningful message. 
+\begin{itemize}
+\item[\textbf{(a)}] Why should Alice expect to get a meaningful message fairly soon? 
+\item[\textbf{(b)}] If Oscar intercepts $x$ (he already knows $n$), why should it be hard for him to determine the message $m$? 
+\item[\textbf{(c)}] If Eve breaks into Alice's office and thereby is able to try a few chosen-ciphertext attacks on Alice's decryption machine, how can she determine the factorization of $n$?
+\end{itemize}\
 \solution
 
 \end{homeworkProblem}
