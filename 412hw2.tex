@@ -115,20 +115,8 @@
 % Various Helper Commands
 %
 
-% Useful for algorithms
-\newcommand{\alg}[1]{\textsc{\bfseries \footnotesize #1}}
-
-% For derivatives
-\newcommand{\deriv}[1]{\frac{\mathrm{d}}{\mathrm{d}x} (#1)}
-
-% For partial derivatives
-\newcommand{\pderiv}[2]{\frac{\partial}{\partial #1} (#2)}
-
-% Integral dx
-\newcommand{\dx}{\mathrm{d}x}
-
 % Alias for the Solution section header
-\newcommand{\solution}{\textbf{\large Solution}}
+\newcommand{\solution}{\newline \textbf{\large Solution} \newline }
 
 \begin{document}
 
@@ -139,7 +127,17 @@
 
 \begin{homeworkProblem}
 
-Let p be prime.  Show that $a^p \equiv a \pmod p$ for all $a$. \\\\
+Let p be prime.  Show that $a^p \equiv a \pmod p$ for all $a$.
+\newline
+\solution
+
+\end{homeworkProblem}
+
+\pagebreak
+
+\begin{homeworkProblem}
+Let $p \geq 3$ be prime. Show that the only solutions to $x^2 \equiv 1 \pmod p$  are $x \equiv \pm 1 \pmod p$. 
+\newline
 \solution \\
 
 \end{homeworkProblem}
@@ -147,49 +145,62 @@ Let p be prime.  Show that $a^p \equiv a \pmod p$ for all $a$. \\\\
 \pagebreak
 
 \begin{homeworkProblem}
-2. Let p ≥ 3 be prime. Show that the only solutions to x2 ≡ 1 (mod p)  are x ≡ ±1 (mod p). \\\\
-\solution \\
+\renewcommand{\labelenumi}{\textbf{\alph{enumi}}}
+\begin{itemize}
+\item Find all four solutions to $x^2 \equiv 133 \pmod{143}$.
+\item Find all solutions to $x^2 \equiv 77 \pmod {143}$  Hint: There are only two solutions, as $ gcd(77, 143) \neq 1$ 
+ \end{itemize}\
+\solution
 
 \end{homeworkProblem}
 
 \pagebreak
 
 \begin{homeworkProblem}
-3.     a         b Find all four solutions to x2 ≡ 133 (mod 143). Find all solutions to x2 ≡ 77 (mod 143)  Hint: There are only two solutions, as gcd(77, 143) ≠ 1 
-\solution \\
+Find solutions to:
+\renewcommand{\labelenumi}{\textbf{\alph{enumi}}}
+\begin{enumerate}
+ \item $3x - 15y = 2$
+ \item $3x - 14y = 2$
+\end{enumerate}\
+\solution
 
 \end{homeworkProblem}
 
 \pagebreak
 
 \begin{homeworkProblem}
-4.         a         b Find solutions to: 3x - 15y = 2 3x - 14y = 2 \\\\
-\solution \\
+Prove the following theorem \\
+	\textbf{Theorem:} Let $p$ be a positive prime and $g$ be a primitive root modulo $p$.
+	\begin{itemize}
+	\item[] 1. Let $n$ be an integer, then \\
+	$g^n \equiv 1 \pmod p$ if and only if $n \equiv 0 \pmod{p - 1}$. \\
+	2. If $j$ and $k$ are integers, then \\
+	 $g^j \equiv g^k (mod p)$ if and only if $j \equiv k \pmod{p - 1}$.
+	 \end{itemize}
+	 You are welcome to read the proof on page 84, but your solution must be written in your own words. \newline
+\solution 
 
 \end{homeworkProblem}
 
 \pagebreak
 
 \begin{homeworkProblem}
-5. Prove the following theorem Theorem: Let p be a positive prime and g be a primitive root modulo p. 1. Let n be an integer, then gn ≡ 1 (mod p) if and only if n ≡ 0 (mod p - 1). 2. If j and k are integers, then gj ≡ gk (mod p) if and only if j ≡ k (mod p - 1). You are welcome to read the proof on page 84, but your solution must be written in your own words. \\\\
-\solution \\
+\renewcommand{\labelenumi}{\alph{enumi}}
+\begin{enumerate}
+\item Let $p$ be a positive prime.  Define a \textit{primitive root modulo} $p$
+\item Identify all primitive roots modulo 11.  Is your solution consistent with the claim that there are $\varphi(\varphi(p))$ primitive roots \textit{modulo} p?
+\item We stated the \textit{Primitive Root Theorem}:  If $p$ is prime, then there is at least one primitive root modulo $p$.  Show that this result does not hold for composite $n$: if $n$ is composite, then there may not be unit that is a multiplicative generator (ie, primitive root) of the set of units modulo $n$.  Hint: Check modulo 8. 
+\end{enumerate}\
+\solution
 
 \end{homeworkProblem}
 
 \pagebreak
 
 \begin{homeworkProblem}
-6.      a         b         c Let p be a positive prime.  Define a primitive root modulo pIdentify all primitive roots modulo 11.  Is your solution consistent with the claim that there are φ(φ(p)) primitive roots modulo p? We stated the Primitive Root Theorem:  If p is prime, then there is at least one primitive root modulo p.  Show that this result does not hold for composite n: if n is composite, then there may not be unit that is a multiplicative generator (ie, primitive root) of the set of units modulo n.  Hint: Check modulo 8. \\\\
-\textbf{Solution} \\
-
-\end{homeworkProblem}
-
-\pagebreak
-
-\begin{homeworkProblem}
-7. Question 27 in the book.
-
-\textbf{Solution} \\
+Question 27 in the book.
+\solution
 
 \end{homeworkProblem}
 	
