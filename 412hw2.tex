@@ -1,13 +1,15 @@
+\PassOptionsToPackage{table}{xcolor}
 \documentclass{article}
-
 \usepackage{fancyhdr}
 \usepackage{extramarks}
+\usepackage{chngcntr}
 \usepackage{amsmath}
 \usepackage{amsthm}
 \usepackage{amsfonts}
 \usepackage{tikz}
 \usepackage{amssymb}
 \usepackage{stackrel}
+\usepackage{color}
 
 
 \usetikzlibrary{automata,positioning}
@@ -63,7 +65,6 @@
 %
 % This environment takes an optional argument. When given, it will adjust the
 % problem counter. This is useful for when the problems given for your
-% assignment aren't sequential. See the last 3 problems of this template for an
 % example.
 %
 \newenvironment{homeworkProblem}[1][-1]{
@@ -77,6 +78,7 @@
     \exitProblemHeader{homeworkProblemCounter}
 }
 
+\counterwithin*{equation}{homeworkProblemCounter}
 %
 % Homework Details
 %   - Title
@@ -130,6 +132,12 @@
 Let p be prime.  Show that $a^p \equiv a \pmod p$ for all $a$.
 \newline
 \solution
+In the case that $p$ is prime and $p \nmid a$ this is easily proven using \textbf{Fermat's Little Theorem} if $a^{p-1} \equiv 1 \pmod p$ as the Fermat tells us then it is trivial to show that 
+\begin{align*}
+a\cdot a^{p-1} &\equiv a\cdot 1 \pmod p \\
+a^{p} &\equiv a \pmod p
+\end{align*}
+is true.
 
 \end{homeworkProblem}
 
@@ -139,6 +147,21 @@ Let p be prime.  Show that $a^p \equiv a \pmod p$ for all $a$.
 Let $p \geq 3$ be prime. Show that the only solutions to $x^2 \equiv 1 \pmod p$  are $x \equiv \pm 1 \pmod p$. 
 \newline
 \solution \\
+It is trivial to show that $1^2 \equiv 1 \pmod p$, What about -1? Let $q \in \mathbb Z,$ with $ 1 < q < p$ since $p$ is prime we can assume that gcd($p$,$q$) = 1 and using the definition of greatest common divisor we know 
+\begin{equation}
+1 = p(a) + q( q )
+\end{equation}
+We can now show that $p-1$ will always be a solution to equation (1):
+\begin{align*}
+(p-1)(p-1)\\
+p^2 - 2p + 1\\
+p(p-2) + 1 
+\end{align*}
+
+Therefore $a = -p + 2 $ and more importantly $q = p - 1 $ is always a solution to equation (1). Can there be any other solutions? No, for another solution to exist of the form $q = p - a$ then $a^2 - 1$ must be prime (more specifically the prime $p$ but don't worry about that).\\
+A number $a^2 -1$ must have the factors $(a-1),(a+1)$ and as such it is not prime, except for 3 because for $a = 2$, 1 and 3 are the factors.\\
+This is inconsequential though because the solutions to $x^2 \equiv 1 \pmod 3$ are 1 and 2 i.e. $\pm1 \pmod 3$ 
+
 
 \end{homeworkProblem}
 
@@ -148,9 +171,33 @@ Let $p \geq 3$ be prime. Show that the only solutions to $x^2 \equiv 1 \pmod p$ 
 \renewcommand{\labelenumi}{\textbf{\alph{enumi}}}
 \begin{itemize}
 \item Find all four solutions to $x^2 \equiv 133 \pmod{143}$.
-\item Find all solutions to $x^2 \equiv 77 \pmod {143}$  Hint: There are only two solutions, as $ gcd(77, 143) \neq 1$ 
+\item Find all solutions to $x^2 \equiv 77 \pmod {143}$  Hint: There are only two solutions, as gcd(77, 143)$ \neq 1$ 
  \end{itemize}\
 \solution
+\begin{itemize}
+\item The residue class 143 can be broken into 2 residue classes $\pmod {11}$ and $\pmod {13}$ creating two equations that are easier to solve
+$$ x^2 = 133 \pmod {143} 
+	\begin{cases} 
+    	x^2 \equiv 1 & \pmod {11} \\
+     	x^2 \equiv 3 &  \pmod {13} \\
+	\end{cases}
+	$$
+Since square roots of 1 are easy to find in fields we know $x^2 \equiv 1 \pmod {11}$ has two solutions $ x \equiv \pm 1 \pmod{11}$. $x^2 \equiv 3 \pmod {13}$ is a bit harder to solve but thanks to \textbf{Fermat's theorem} we know that $x = y^{\frac{p+1}{4}} \pmod p$ will result in the square roots of $y \pmod p$ being $\pm x$  which in this case $x = 9$ so the two solutions are $x^2 \equiv 9 \pmod {13}$ and $x^2 \equiv 3 \pmod {13}$. These solutions can be put together in four ways:
+\begin{align*}
+x^2 \equiv 1 \pmod {11} &,& x^2 \equiv 9 \pmod {13} && \longrightarrow && x^2 \equiv 100 \pmod {143}\\
+x^2 \equiv -1 \pmod {11} &,& x^2 \equiv 9 \pmod {13} && \longrightarrow && x^2 \equiv 87 \pmod {143}\\
+x^2 \equiv 1 \pmod {11} &,& x^2 \equiv 4 \pmod {13} && \longrightarrow && x^2 \equiv 56 \pmod {143}\\
+x^2 \equiv -1 \pmod {11} &,& x^2 \equiv 4 \pmod {13} && \longrightarrow && x^2 \equiv  43 \pmod {143}\\
+\end{align*}
+So the solutions of $x^2 \equiv 133 \pmod{143}$ are $x \equiv 43,56,87,100 \pmod{35}$
+
+\item  Since gcd(77, 143) $\neq 1$ to use the \textbf{Chinese Remainder theorem} we must reduce this problem to one in which the greatest common divisor is 1. Since gcd(77, 143) = 11 we can do this by dividing through by 11. Afterward we have $x^2 \equiv 7 \pmod {13}$.
+\\
+As in the last problem we can find the square roots of 7 $\pmod {13}$ using \textbf{Fermat's theorem}, however we run into a problem. Computing $x = y^{\frac{p+1}{4}} \pmod p$ gives $x = 10$ but 10 is not a square root of 7. No fear though, part two of \textbf{Fermat's theorem} will save us. $-10 \equiv 3 \pmod {13}$ and the square roots of 3 are $9,4 \pmod {13}$ 
+\\
+Translating these roots back to our original problem gives us the $x^2 \equiv 77 \pmod{143}$ are $x \equiv 44,99 \pmod{35}$
+ \end{itemize}\
+
 
 \end{homeworkProblem}
 
@@ -164,6 +211,24 @@ Find solutions to:
  \item $3x - 14y = 2$
 \end{enumerate}\
 \solution
+\begin{enumerate}
+ \item $3x - 15y = 2$ has no integer solutions since gcd( 3,15) $\nmid 2$
+ \item The first step is to check if gcd( 3, -14 ) divides 2. Since we will need it later we will do check this using \textbf{Euler's Extended algorithm}.
+ \begin{align*}
+ 14 &= 3 ( 4 ) + 2 \\
+ 3  &= 2 ( 1 ) + 1 \\
+ 2  &= \textbf{1} ( 2 ) + 0 \\
+ \end{align*} 
+ Since $1 \mid 2$ this equation has integer solutions. We will find them by completing \textbf{Euler's Extended algorithm}.
+  \begin{align*}
+ 1 	&= 3 - 2(1) \\
+ 1	&= 3 - (14 - 3(4)) \\
+ 1  &= 14( -1 ) + 3( 5 ) \\
+ \end{align*} 
+ After completing the algorithm there are two things we need to do to find the solutions. First since in the equation the 14 is negative the coefficent on it must have it's sign changed. Secondly we must multiply the left side of the equation and the right sides coefficents by 2. \\
+ Therefore the solutions to $3x - 14y = 2$ are $x = 10$ and $ y = 2$. Additionally it is important to note that these solutions are only one of a family of solutions of the form $x = 10 + 14n$ and $y = 2 + 3n$ with $n \in \mathbb{Z}$ 
+\end{enumerate}\
+
 
 \end{homeworkProblem}
 
@@ -176,36 +241,93 @@ Prove the following theorem \\
 	\item[] 1. Let $n$ be an integer, then \\
 	$g^n \equiv 1 \pmod p$ if and only if $n \equiv 0 \pmod{p - 1}$. \\
 	2. If $j$ and $k$ are integers, then \\
-	 $g^j \equiv g^k (mod p)$ if and only if $j \equiv k \pmod{p - 1}$.
+	 $g^j \equiv g^k \pmod p$ if and only if $j \equiv k \pmod{p - 1}$.
 	 \end{itemize}
 	 You are welcome to read the proof on page 84, but your solution must be written in your own words. \newline
 \solution 
+\begin{equation}
+g^n \equiv 1 \pmod p \rightarrow n \equiv 0 \pmod{p - 1}
+\end{equation}\\
+	This is easily shown by \textbf{Fermat's Little Theorem}. If $a ^{p-1} \equiv 1 \pmod p$ then there must must be at least some $n$ that satisfies the equation. However since $g$ is also a multiplicative generator, each of the congruence classes mod $p$ must be obtainable, and unique.\\\\
+
+\begin{equation}
+n \equiv 0 \pmod{p - 1} \rightarrow g^n \equiv 1 \pmod p
+\end{equation}\\
+The logic here is nearly identical to above in part (1). \\\\
+
+\begin{equation}
+g^j \equiv g^k \pmod p \rightarrow j \equiv k \pmod{p - 1}
+\end{equation}\\
+We can say without loss of generality that $j \geq g$. Since this is a field it is also possible to divide the right side of the equation by the left leaving. $g^{j - g} \equiv 1 \pmod p$. By part (1) we know that $j -g \equiv 0 \pmod{p-1}$ and thus $j \equiv k \pmod{p - 1}$\\\\
+
+\begin{equation}
+j \equiv k \pmod{p - 1} \rightarrow g^j \equiv g^k \pmod p
+\end{equation}\\
+The proof for this is identical to part (3) but in reverse. 
 
 \end{homeworkProblem}
 
 \pagebreak
 
 \begin{homeworkProblem}
-\renewcommand{\labelenumi}{\alph{enumi}}
+\renewcommand{\labelenumi}{\textbf{\alph{enumi}}}
 \begin{enumerate}
 \item Let $p$ be a positive prime.  Define a \textit{primitive root modulo} $p$
-\item Identify all primitive roots modulo 11.  Is your solution consistent with the claim that there are $\varphi(\varphi(p))$ primitive roots \textit{modulo} p?
+\item Identify all primitive roots modulo 11.  Is your solution consistent with the claim that there are $\phi(\phi(p))$ primitive roots \textit{modulo} p?
 \item We stated the \textit{Primitive Root Theorem}:  If $p$ is prime, then there is at least one primitive root modulo $p$.  Show that this result does not hold for composite $n$: if $n$ is composite, then there may not be unit that is a multiplicative generator (ie, primitive root) of the set of units modulo $n$.  Hint: Check modulo 8. 
 \end{enumerate}\
 \solution
+\begin{enumerate}
+\item A \textit{primitive root} $r$, also known as \textit{multiplicative generator} is a congruence class mod $p$ whos powers $r^1 \equiv a_1, r^2 \equiv a_2 \dots r^{p-1} \equiv a_{p-1}$ result in the set of all non-zero congruence classes mod $p$. 
+\item Observe the Cayley table below
+\begin{center}
+\newcommand{\dark}[1]{\cellcolor[gray]{0.5}{#1}}
+\newcommand{\light}[1]{\cellcolor[gray]{0.8}{#1}}
+\begin{tabular}{ |c|c|c|c|c|c|c|c|c|c|c|c|}
+\hline
+\dark X &\dark1 &\dark2 &\dark3 &\dark4 &\dark5 &\dark6 &\dark7 &\dark8 &\dark9 &\dark10\\ \hline
+\dark1 & 1 & \light 2 & 3 & 4 & 5 & \light 6 & \light 7 & \light 8 & 9 & 10 \\ \hline
+\dark2 & 2 & \light 4 & 6 & 8 & 10 & \light 1 & \light 3 & \light 5 & 7 & 9 \\ \hline
+\dark3 & 3 & \light 6 & 9 & 1 & 4 & \light 7 & \light 10 & \light 2 & 5 & 8 \\ \hline
+\dark4 & 4 & \light 8 & 1 & 5 & 9 & \light 2 & \light 6 & \light 10 & 3 & 7 \\ \hline
+\dark5 & 5 & \light 10 & 4 & 9 & 3 & \light 8 & \light 2 & \light 7 & 1 & 6 \\ \hline
+\dark6 & 6 & \light 1 & 7 & 2 & 8 & \light 3 & \light 9 & \light 4 & 10 & 5 \\ \hline
+\dark7 & 7 & \light 3 & 10 & 6 & 2 & \light 9 & \light 5 & \light 1 & 8 & 4 \\ \hline
+\dark8 & 8 & \light 5 & 2 & 10 & 7 & \light 4 & \light 1 & \light 9 & 6 & 3 \\ \hline
+\dark9 & 9 & \light 7 & 5 & 3 & 1 & \light 10 & \light 8 & \light 6 & 4 & 2 \\ \hline
+\dark10 & 10 & \light 9 & 8 & 7 & 6 & \light 5 & \light 4 & \light 3 & 2 & 1\\ \hline
+\end{tabular}\
+\end{center}
+Note the highlighted columns. Each of them represent a primitive root, this can be checked via inspection. This confirms what we know concerning $\phi(\phi(p))$ which in the case of $p$ being prime is equivelent to $\phi(p-1)$ Since $\phi(10) = 4$ and there are 4 primitive roots our claim is proven true.
+\item The easiest way to confirm this is by checking all of the possible generators of say modulo 8 and note that each quickly enter cycles which do not span the set of residue classes
+\begin{align*}
+2 &\rightarrow 4 \rightarrow 0\\
+3 &\rightarrow 1 \rightarrow 3 \\
+4 &\rightarrow 0 \\
+5 &\rightarrow 1 \rightarrow 5\\
+6 &\rightarrow 0 \\
+7 &\rightarrow 1 \rightarrow 7\\
+\end{align*}
+\end{enumerate}
 
 \end{homeworkProblem}
 
 \pagebreak
 
 \begin{homeworkProblem}
-Alice designs a cryptosystem as follows (this system is due to Rabin). She chooses two distinct primes $p$ and $q$ (preferably, both $p$ and $q$ are congruent to 3 mod 4) and keeps them secret. She makes $n = pq$ public. When Bob wants to send Alice a message $m$, he computes $x \equiv m^2 \pmod n$ and sends $x$ to Alice. She makes a decryption machine that does the following: When the machine is given a number $x$ , it computes the square roots of $x \mod n$ since it knows $p$ and $q$. There is usually more than one square root. It chooses one at random, and gives it to Alice. When Alice receives $x$ from Bob, she puts it into her machine. If the output from the machine is a meaningful message, she assumes it is the correct message. If it is not meaningful, she puts $x$ into the machine again. She continues until she gets a meaningful message. 
+Alice designs a cryptosystem as follows (this system is due to Rabin). She chooses two distinct primes $p$ and $q$ (preferably, both $p$ and $q$ are congruent to 3 mod 4) and keeps them secret. She makes $n = pq$ public. When Bob wants to send Alice a message $m$, he computes $x \equiv m^2 \pmod n$ and sends $x$ to Alice. She makes a decryption machine that does the following: When the machine is given a number $x$, it computes the square roots of $x \mod n$ since it knows $p$ and $q$. There is usually more than one square root. It chooses one at random, and gives it to Alice. When Alice receives $x$ from Bob, she puts it into her machine. If the output from the machine is a meaningful message, she assumes it is the correct message. If it is not meaningful, she puts $x$ into the machine again. She continues until she gets a meaningful message. 
 \begin{itemize}
 \item[\textbf{(a)}] Why should Alice expect to get a meaningful message fairly soon? 
 \item[\textbf{(b)}] If Oscar intercepts $x$ (he already knows $n$), why should it be hard for him to determine the message $m$? 
 \item[\textbf{(c)}] If Eve breaks into Alice's office and thereby is able to try a few chosen-ciphertext attacks on Alice's decryption machine, how can she determine the factorization of $n$?
 \end{itemize}\
 \solution
+
+\begin{itemize}
+\item[\textbf{(a)}] Since $n$ is composite but only has 2 prime factors, there can only be four possible results via the \textbf{Chinese Remainder Theorem}. Four is pretty small so she should expect the result rather quickly.
+\item[\textbf{(b)}] Because Factoring Large primes is difficult. And finding square roots in large congruence classes is also hard.
+\item[\textbf{(c)}] Since Alice's machine also outputs wrong answers, Eve can take a simple text $m$ run the machine on $\sqrt{m}$ and find all four roots using the \textbf{Chinese Remainder Theorem}.s
+\end{itemize}\
 
 \end{homeworkProblem}
 	
