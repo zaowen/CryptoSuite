@@ -1,0 +1,197 @@
+
+\documentclass{article}
+
+\usepackage{fancyhdr}
+\usepackage{extramarks}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amsfonts}
+\usepackage{tikz}
+\usepackage{amssymb}
+\usepackage{stackrel}
+
+
+\usetikzlibrary{automata,positioning}
+
+%
+% Basic Document Settings
+%
+
+\topmargin=-0.45in
+\evensidemargin=0in
+\oddsidemargin=0in
+\textwidth=6.5in
+\textheight=9.0in
+\headsep=0.25in
+
+\linespread{1.1}
+
+\pagestyle{fancy}
+\lhead{\hmwkAuthorName}
+\chead{\hmwkClass\ (\hmwkClassInstructor\ \hmwkClassTime): \hmwkTitle}
+\rhead{\firstxmark}
+\lfoot{\lastxmark}
+\cfoot{\thepage}
+
+\renewcommand\headrulewidth{0.4pt}
+\renewcommand\footrulewidth{0.4pt}
+
+\setlength\parindent{0pt}
+
+%
+% Create Problem Sections
+%
+
+\newcommand{\enterProblemHeader}[1]{
+    \nobreak\extramarks{}{Problem \arabic{#1} continued on next page\ldots}\nobreak{}
+    \nobreak\extramarks{Problem \arabic{#1} (continued)}{Problem \arabic{#1} continued on next page\ldots}\nobreak{}
+}
+
+\newcommand{\exitProblemHeader}[1]{
+    \nobreak\extramarks{Problem \arabic{#1} (continued)}{Problem \arabic{#1} continued on next page\ldots}\nobreak{}
+    \stepcounter{#1}
+    \nobreak\extramarks{Problem \arabic{#1}}{}\nobreak{}
+}
+
+\setcounter{secnumdepth}{0}
+\newcounter{partCounter}
+\newcounter{homeworkProblemCounter}
+\setcounter{homeworkProblemCounter}{1}
+\nobreak\extramarks{Problem \arabic{homeworkProblemCounter}}{}\nobreak{}
+
+%
+% Homework Problem Environment
+%
+% This environment takes an optional argument. When given, it will adjust the
+% problem counter. This is useful for when the problems given for your
+% assignment aren't sequential. See the last 3 problems of this template for an
+% example.
+%
+\newenvironment{homeworkProblem}[1][-1]{
+    \ifnum#1>0
+        \setcounter{homeworkProblemCounter}{#1}
+    \fi
+    \section{Problem \arabic{homeworkProblemCounter}}
+    \setcounter{partCounter}{1}
+    \enterProblemHeader{homeworkProblemCounter}
+}{
+    \exitProblemHeader{homeworkProblemCounter}
+}
+
+%
+% Homework Details
+%   - Title
+%   - Due date
+%   - Class
+%   - Section/Time
+%   - Instructor
+%   - Author
+%
+
+\newcommand{\hmwkTitle}{Homework\ \#2}
+\newcommand{\hmwkDueDate}{Nevember 8, 2017}
+\newcommand{\hmwkClass}{Cryptography}
+\newcommand{\hmwkClassTime}{Section 001}
+\newcommand{\hmwkClassInstructor}{Karlsson, Christer H}
+\newcommand{\hmwkAuthorName}{\textbf{Zachary Owen}}
+
+%
+% Title Page
+%
+
+\title{
+    \vspace{2in}
+    \textmd{\textbf{\hmwkClass:\ \hmwkTitle}}\\
+    \normalsize\vspace{0.1in}\small{Due\ on\ \hmwkDueDate\ at 3:00pm}\\
+    \vspace{0.1in}\large{\textit{\hmwkClassInstructor\ \hmwkClassTime}}
+    \vspace{3in}
+}
+
+\author{\hmwkAuthorName}
+\date{}
+
+\renewcommand{\part}[1]{\textbf{\large Part \Alph{partCounter}}\stepcounter{partCounter}\\}
+
+%
+% Various Helper Commands
+%
+
+
+% Alias for the Solution section header
+\newcommand{\solution}{\bigskip \textbf{\large Solution}}
+
+\begin{document}
+
+\maketitle
+
+\pagebreak
+
+\begin{homeworkProblem}
+Naive Nelson uses RSA to receive a single ciphertext $c$ , corresponding to the message $m$. His public modulus is $n$ and his public encryption exponent is $e$.  Since he feels guilty that his system was used only once , he agrees to decrypt any ciphertext that someone sends him, as long as it is not $c$ , and return the answer to that person.  Evil Eve sends him the ciphertext $2^e c \pmod n$.  Show how this allows Eve to find $m$.
+
+\solution
+
+Since $c = m^e \pmod n$,
+
+\begin{align*}
+2^e c &\pmod n \\
+2^e m^e &\pmod n \\
+2m^e \rightarrow (2m^e)^d &\pmod n\\
+2m &\pmod n \\
+\end{align*}
+
+So Evil Eve can obtain the plaintext by multiplying the returned message by $\frac{1}{2} \pmod n$
+
+\end{homeworkProblem}
+
+\pagebreak
+
+\begin{homeworkProblem}
+
+In order to increase security, Bob chooses n and two encryption exponents $e_1$ , $e_2$.  He asks Alice to encrypt her message $m$ to him by first computing $c_1 \equiv m^{e_1} \pmod n$, then encrypting $c_1$ to get $c_2 \equiv c^{e_2}_1 \pmod n$.  Alice then sends $c_2$ to Bob.  Does this double encryption increase security over single encryption?  Why or why not?
+
+\solution
+
+\begin{enumerate}
+\item \textbf{If $n$ is prime:} No, since every element in a finite field is a primitive root there must some element $e_0 = e_1e_2$ such that $m^{e_0} = c_2$
+\item \textbf{If $n$ is composite} Yes, since $e_0$ does not nessesarily exist.
+\end{enumerate} 
+
+\end{homeworkProblem}
+
+\pagebreak
+
+\begin{homeworkProblem}
+
+Show that if $p$ is prime and $a$ and $b$ are integers not divisible by $p$ , with $a^p \equiv b^p \pmod p$, then $a^p \equiv b^p \pmod{p^2}$
+
+\solution
+
+\end{homeworkProblem}
+
+\pagebreak
+
+\begin{homeworkProblem}
+
+Your opponent uses RSA with $n = pq$ and encryption exponent $e$ and encrypts a message $m$.  This yields the ciphertext $c \equiv  m^e \pmod n $.  A spy tells you that, for this message, $m^{12345} \equiv 1 \pmod n$  Describe how to determine $m$.  Note that you do not know $p$, $q$, $\phi(n)$, or the secret decryption exponent $d$.  However, you should find a decryption exponent that works for this particular ciphertext.  Moreover, explain carefully why your decryption works (your explanation must include how the spy’s information is used).
+
+\solution
+
+\end{homeworkProblem}
+
+\pagebreak
+
+\begin{homeworkProblem}
+
+\renewcommand{\labelenumi}{\textbf{\alph{enumi}}}
+\begin{enumerate}
+\item  Show that the last two decimal digits of a perfect square must be one of the following pairs: $00, el, e4, 25, o6, e9$, where $e$ stands for any even digit and $o$ stands for any odd digit. (Hint: Show that $n^2$ , $(50 + n)^2$, and $(50 - n)^2$ all have the same final decimal digits, and then consider those integers $n$ with $0 \leq n \leq 25$) 
+\item Explain how the result of part (a) can be used to speed up Fermat's
+factorization method.
+\end{enumerate} 
+
+\solution
+
+\end{homeworkProblem}
+
+\end{document}
