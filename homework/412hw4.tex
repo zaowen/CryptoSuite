@@ -154,7 +154,7 @@ In order to increase security, Bob chooses n and two encryption exponents $e_1$ 
 
 \begin{enumerate}
 \item \textbf{If $n$ is prime:} No, since every element in a finite field is a primitive root there must some element $e_0 = e_1e_2$ such that $m^{e_0} = c_2$
-\item \textbf{If $n$ is composite} Yes, since $e_0$ does not nessesarily exist.
+\item \textbf{If $n$ is composite} Yes, since $e_0$ does not necessarily exist.
 \end{enumerate} 
 
 \end{homeworkProblem}
@@ -167,6 +167,18 @@ Show that if $p$ is prime and $a$ and $b$ are integers not divisible by $p$ , wi
 
 \solution
 
+By Fermat's Little Theorem we know that $a^p \equiv a \pmod{p}$. We also know $a = pk + a_0$ for some $k$ by the definition of division. This applies without loss of generality to $b$. Meaning $a^p = (pk + a_0)^p$.
+
+We can then expand $(pk+a_0)^p \pmod p^2$ by observing that $p^n \equiv 0 \pmod{p^2}$ for $n \geq 2$. Thus:
+\begin{align*}
+a^p &= (pk+a_0)^p \pmod p^2 \\
+&= \binom{p}{p-1}pk + a_0 \pmod p^2 \\
+&= ppk + a_0 \pmod p^2 \\
+&= a_0 \pmod p^2 \\
+\end{align*}
+
+Therefore, $a_0 \equiv b_0 \pmod{p^2}$
+
 \end{homeworkProblem}
 
 \pagebreak
@@ -176,6 +188,25 @@ Show that if $p$ is prime and $a$ and $b$ are integers not divisible by $p$ , wi
 Your opponent uses RSA with $n = pq$ and encryption exponent $e$ and encrypts a message $m$.  This yields the ciphertext $c \equiv  m^e \pmod n $.  A spy tells you that, for this message, $m^{12345} \equiv 1 \pmod n$  Describe how to determine $m$.  Note that you do not know $p$, $q$, $\phi(n)$, or the secret decryption exponent $d$.  However, you should find a decryption exponent that works for this particular ciphertext.  Moreover, explain carefully why your decryption works (your explanation must include how the spy’s information is used).
 
 \solution
+
+There are two possiblities, either $gcd( 12345, e) = 1$ or it doesn't. If it does we can use the Extended Euclidian Algorithm to calculate the inverse of $e \pmod {12345} = d_0$.
+
+$$ed_0 = 12345a + 1$$
+
+Then we can raise the ciphertext to $d_0$ and the rest is algebra
+
+\begin{align*}
+c^{d_0}  &\pmod n \\
+(m^e)^{d_0}  &\pmod n \\
+m^{ed_0}  &\pmod n \\
+m^{12345a + 1}  &\pmod n \\
+m^{12345a }m  &\pmod n \\
+1\cdot m  &\pmod n \\
+\end{align*}
+
+In the case that $gcd(12345, e) \neq 1$  and the final step looks like 
+$1\cdot m  \pmod n $
+it is possible to continuously multiply the result by $m$ until the messange makes sense. or if the gcd is known simply multiply it by $m$ raised to the diffrence.
 
 \end{homeworkProblem}
 
@@ -191,6 +222,51 @@ factorization method.
 \end{enumerate} 
 
 \solution
+
+\begin{enumerate}
+\item First, note that since we only care about the final 2 decimal digits we can work in $\mod{100}$  
+
+Second, observe that the expansions of $(50 + n)^2$, and $(50 - n)^2$ are equivalent to $n^2$.
+\begin{align*}
+(50 + n)^2 &= 2500 + 100n + n^2 & \equiv n^2 \pmod{100} \\
+(50 - n)^2 &= 2500 - 100n + n^2 & \equiv n^2 \pmod{100} \\
+\end{align*}
+and note that the functions $(50 + n)^2$, $(50 - n)^2$, and $n^2$ represent all of $\mathbb{Z}_{100}$ on the range $0 \leq n \leq 25$. (with $n^2$ also representing values on the same negative range since they will become positive on squaring anyway)
+
+Finally, observe this handy-dandy chart on the next page:
+
+\begin{align*}
+n^2 &\equiv m \pmod {100} \\
+1^2 &\equiv 1 \pmod {100} \\
+2^2 &\equiv 4 \pmod {100} \\
+3^2 &\equiv 9 \pmod {100} \\
+4^2 &\equiv 16 \pmod {100} \\
+5^2 &\equiv 25 \pmod {100} \\
+6^2 &\equiv 36 \pmod {100} \\
+7^2 &\equiv 49 \pmod {100} \\
+8^2 &\equiv 64 \pmod {100} \\
+9^2 &\equiv 81 \pmod {100} \\
+10^2 &\equiv 100 \pmod {100} \\
+11^2 &\equiv 121 \pmod {100} \\
+12^2 &\equiv 144 \pmod {100} \\
+13^2 &\equiv 169 \pmod {100} \\
+14^2 &\equiv 196 \pmod {100} \\
+15^2 &\equiv 225 \pmod {100} \\
+16^2 &\equiv 256 \pmod {100} \\
+17^2 &\equiv 289 \pmod {100} \\
+18^2 &\equiv 324 \pmod {100} \\
+19^2 &\equiv 361 \pmod {100} \\
+20^2 &\equiv 400 \pmod {100} \\
+21^2 &\equiv 441 \pmod {100} \\
+22^2 &\equiv 484 \pmod {100} \\
+23^2 &\equiv 529 \pmod {100} \\
+24^2 &\equiv 576 \pmod {100} \\
+25^2 &\equiv 625 \pmod {100} \\
+\end{align*}
+
+\item Integrating this method with an implementation of Fermat's factorization method would speed it up by determining which combinations of patterns of squares would give \textbf{N} and then skipping the $a$ values which cannot possibly result in a correct answer. $b$ could also be checked similarly.
+
+\end{enumerate} 
 
 \end{homeworkProblem}
 
