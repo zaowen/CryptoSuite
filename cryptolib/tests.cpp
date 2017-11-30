@@ -79,6 +79,36 @@ namespace {
 
     }
 
+    TEST( FERMATest, Large){
+        mpz_t a;
+        mpz_init_set_str( a, "162259276829213363391578010288127" , 10);
+
+        EXPECT_TRUE( crypto::isPrime_Fermat( a ) );
+    }
+
+    TEST( FERMATest, Basic){
+        mpz_t a;
+        mpz_init_set_ui( a, 11 );
+
+        EXPECT_TRUE( crypto::isPrime_Fermat( a ) );
+    }
+
+    TEST( FERMATest, BasicFalse ){
+        mpz_t a;
+        mpz_init_set_ui( a, 100 );
+
+        EXPECT_FALSE( crypto::isPrime_Fermat( a ) );
+    }
+
+    TEST( RANDPRIMETest, Base){
+        mpz_t a;
+        mpz_init( a );
+        crypto::random_prime( a , 100);
+        gmp_printf("Large Random: %Z\n", a);
+
+        EXPECT_FALSE(false);
+    }
+
 }  // namespace
 
 int main(int argc, char **argv) {
