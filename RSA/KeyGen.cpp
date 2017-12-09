@@ -3,7 +3,7 @@
 #include <gmpxx.h>
 #include "cryptomath.h"
 
-
+#define k 2048
 
 bool chooseE( mpz_t e, mpz_t totent )
 {
@@ -33,8 +33,8 @@ int main()
     mpz_inits( n, p1,q1,totent, NULL );
 
     //Choose secret primes p,q
-    crypto::random_prime( p, 500 );
-    crypto::random_prime( q, 500 );
+    crypto::random_prime( p, k/2 );
+    crypto::random_prime( q, k/2 );
 
     mpz_mul( n , p , q );
 
@@ -42,7 +42,6 @@ int main()
     mpz_sub_ui( p1 , p , 1);
     mpz_sub_ui( q1 , q , 1);
 
-    //crypto::lcm( totent, p1, q1);
     mpz_mul(totent, p1, q1);
 
     if( !chooseE( e, totent) ){
@@ -52,11 +51,12 @@ int main()
 
     crypto::findModInverse( d, e, totent);
 
-    gmp_printf( "%Zd\n%Zd\n%Zd\n", e,n,d);
-    /*
-    gmp_printf( "Public key:%Zd\n", e);
-    gmp_printf( "Encryption n:%Zd\n", n);
-    gmp_printf( "Private key:%Zd\n", d);
-    */
+    printf( "%d\n", k);
+    mpz_out_str( stdout, 16, e);
+    printf( "\n");
+    mpz_out_str( stdout, 16, n);
+    printf( "\n");
+    mpz_out_str( stdout, 16, d);
+    printf( "\n");
 }
 
