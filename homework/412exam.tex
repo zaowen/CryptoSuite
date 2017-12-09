@@ -102,7 +102,7 @@
 \title{
     \vspace{2in}
     \textmd{\textbf{\hmwkClass:\ \hmwkTitle}}\\
-    \normalsize\vspace{0.1in}\small{Due\ on\ \hmwkDueDate\ at 3:00pm}\\
+    \normalsize\vspace{0.1in}\small{Due\ on\ \hmwkDueDate\ at 12:00pm}\\
     \vspace{0.1in}\large{\textit{\hmwkClassInstructor\ \hmwkClassTime}}
     \vspace{3in}
 }
@@ -127,9 +127,11 @@
 \pagebreak
 
 \begin{homeworkProblem}
-(15 pts) When we talk about attacks on RSA, we usually talk about factoring n into pq .  But no one has been able to prove that this is the only way to find $d$ and $e$ given $n$ .  For example we could try to find $\phi(n) = (p - 1)(q - 1)$ without first finding p and q .  Show that finding $\phi(n)$ is sufficient to factor $n$ and therefore enough to find $d$ .
+(15 pts) When we talk about attacks on RSA, we usually talk about factoring n into pq .  But no one has been able to prove that this is the only way to find $d$ and $e$ given $n$ .  For example we could try to find $\phi(n) = (p - 1)(q - 1)$ without first finding p and q .  Show that finding $\phi(n)$ is sufficient to factor $n$ and therefore enough to find $d$.
 
 \solution
+
+Since we know $e$ as the encryption exponent, and $d$ satisfies the equation $de=1(\pmod{\phi(n)})$ we can simply perform \textbf{Euler's Extended Algorithm} s.t. $1 = ex + \phi(n)y$ and $x$ will be equal to d.
 
 \end{homeworkProblem}
 
@@ -145,12 +147,83 @@
  
  The field $\mathbb{F}_{2^8}$ , can be constructed as $\cfrac{\mathbb{Z}_2[ x ]}{ x^8 + x^4 + x^3 + x + 1 }$
 \begin{itemize}
-\item  Compute $( x^5 + 1) - 1 $
+\item  Compute $( x^5 + 1)^{-1} $
  \item Compute $( x^4 + x^2) \times ( x^3 + x + 1)$
 \end{itemize}
 
 \solution
 
+Let us begin by finding all of the fourth order irreducible polynomials over $\mathbb{Z}_x[x]$. Any potential irreducible must contain the $x^0$ since if not every term would contain atleast 1 $x$. This leaves:
+\begin{itemize}
+\item $x^4 + x^3 + x^2 + x + 1$
+\item $x^4 + x^3 + x^2 + 1$
+\item $x^4 + x^3 + x + 1$
+\item $x^4 + x^3 + 1$
+\item $x^4 + x^2 + x + 1$
+\item $x^4 + x^2 + 1$
+\item $x^4 + x + 1$
+\item $x^4 + 1$
+\end{itemize}
+for fourth order polynomials and only
+\begin{itemize}
+\item $x^3 + x^2 + x + 1$
+\item $x^3 + x^2 + 1$
+\item $x^3 + x + 1$
+\item $x^3 + 1$
+\end{itemize}
+for third degree. Since we know the only smaller irreducible polynomials are 
+$x$ ,
+$x + 1$, and
+$x^2 + x + 1$.
+it is now simple to do trial division to find the irreducibles.
+\begin{itemize}
+\item $(x^3 + x^2 + x + 1)| x+ 1 $
+\item $x^3 + x^2 + 1$ Irreducible
+\item $x^3 + x + 1$ Irreducible
+\item $(x^3 + 1) | (x + 1)$
+\end{itemize}
+And then for the fourth order...
+\begin{itemize}
+\item $x^4 + x^3 + x^2 + x + 1$ Irreducible
+\item $x^4 + x^3 + x^2 + 1 | x + 1$
+\item $x^4 + x^3 + x + 1 | (x +1)$ 
+\item $x^4 + x^3 + 1$ Irreducible
+\item $(x^4 + x^2 + x + 1) | (x^3+x^2 + x)$
+\item $(x^4 + x^2 + 1) | (x^2 + x + 1)$
+\item $x^4 + x + 1$ Irreducible
+\item $(x^4 + 1) | (x +1)$
+\end{itemize}
+
+Meaning all the irreducible polynomials of lower than order 5 are:
+$x$ ,$x + 1$,
+$x^2 + x + 1$,
+$x^3 + x^2 + 1$,
+$x^3 + x + 1$,
+$x^4 + x^3 + x^2 + x + 1$,
+$x^4 + x^3 + 1$  and
+$x^4 + x + 1$. Again we proceed with trial division and get.
+
+\begin{itemize}
+ \item $x^5 + x^4 + 1 = (x^2 + x + 1)(x^3 + x + 1)$
+ \item $x^5 + x^3 + 1 $ Irreducible
+ \item $x^5 + x^4 + x^2 + 1 = (x+1)(x^4 + x +1)$
+\end{itemize}
+
+
+\begin{itemize}
+\item The inverse of an element $a$ in an Galois Field mod $b$ can be found by solving the diaphontine equation
+$1 = (x^5 + 1)x + (x^8 + x^4 + x^ 3 + x+ 1)y$
+\begin{align*}
+     (x^8 + x^4 + x^ 3 + x+ 1) &= (x^3)(x^5 + 1) + (x^4 + x + 1) \\
+     (x^5 + 1) &= (x)(x^4 + x + 1) + (x^2 + x + 1)\\
+     (x^4 + x + 1) &= (x^2+x)(x^2 + x + 1) + 1\\
+     1 &= (x^4 + x + 1) + (x^2 + x + 1)(x^2 +x) \\
+     1 &= (x^2 +x)(x^5 + 1) + (x^3 + x^2 + 1)( x^4 + x + 1)\\
+     1 &= (x^5 + 1)( x^6 + x^5 + x^3 + x^2 + x) +(x^8 + x^4 + x^ 3 + x+ 1)(x^3+x^2+1)\\
+\end{align*}
+ $( x^5 + 1)^{-1} = x^6 + x^5 + x^3 + x^2 + x \pmod{\mathbb{Z}_2[x]/x^8 + x^4 + x^ 3 + x+ 1}$
+\item $( x^4 + x^2) \times ( x^3 + x + 1) =x^7 + x^4+ x^3 + x^2$
+\end{itemize}
 \end{homeworkProblem}
 
 \pagebreak
@@ -159,6 +232,12 @@
 (15 pts)  My brother is color-blind, and we used to play snooker, if the balls had moved from their original positions he could not distinguished between a red and the green ball, as it is only the color that makes them non-identical.  He was often skeptical that I was actually potting the balls in the correct order.  I like to be able to prove to him that the two balls are in fact differently-colored.  At the same time , I do not want him to learn which is red and which is green.  Device a zero-knowledge protocol that allow me to prove that he really has two different colored balls in front of him.  He is allowed to hold, move and handle the balls, I am only allowed to look at them.
 
 \solution
+
+Your brother could get any number of balls evenly distributed between green and red, then iteratively present the balls to you and ask for a response to the question "Are these the same color or different?" while keeping track of how you respond. He also needs to keep track of which two balls he wants to differentiate. Finally he needs to make sure you do not know which of the balls you are being presented with.
+
+Using this system, you never need to reveal the colors of the balls only which are similarly or differently colored.
+
+While you could lie at any point in time, not knowing which balls he is trying to classify makes it difficult to lie effectively and in a way that will fool him. Even answering the opposite in every case will lead to contradictions.
 
 \end{homeworkProblem}
 
@@ -169,6 +248,40 @@
 
 \solution
 
+$$p = x^2 + y^2 \rightarrow p \equiv 1 \pmod 4$$
+
+$p \equiv 1 \pmod 4$ can be rewritten as $p = 4k + 1$ which itself can be reformed into a more simple (or easier to work with) form $p = x^2 + 4yz$
+Which has at least one solution $(x,y,z) = (1,1,1)$ where $p = 5$.
+\\\\
+First, It is important to note that there are finitely many solutions $(x,y,z) \in \mathbb{Z}^{+}$ for any given $p$. This is true since if there were infinitely many $z,y,z$ would become arbitrarily large and $p$ cannot arbitrarily large.
+\\\\
+Second, we assert that the number of solutions for any given $p$ is odd.
+\\\\
+Third, we observe that if $(x,y,z )$ is a solution then $(x,z,y)$ is a solution since $zy =yz$
+\\\\
+Finally, we observe that by the previous observation that if there only exists solutions where $z\neq y$ then there will be an even number of solutions. This means there must be a solution where $z=y$ meaning there exists a solution where 
+\begin{align*}
+p & = x^2 + 4yz \\
+p & = x^2 + 4yy \\
+p & = x^2 + (2y)^2 \\
+p & = x^2 + (y')^2 \\
+\end{align*}
+
+In order to prove that the number of solutions is necessarily odd I appeal to Zagiers Equation 
+
+$$(x,y,z)\mapsto
+\begin{cases}
+(x+2z,~z,~y-x-z),\quad \textrm{if}\,\,\, x < y-z \\
+(2y-x,~y,~x-y+z),\quad \textrm{if}\,\,\, y-z < x < 2y\\
+(x-2y,~x-y+z,~y),\quad \textrm{if}\,\,\, x > 2y
+\end{cases}$$
+which shows the cardinality of the solution set is the same number of the fixed points. And since the the cardinality of the second mapping is odd QED
+
+$$p = x^2 + y^2 \leftarrow p \equiv 1 \pmod 4$$
+In $\mathbb{Z}_4$ numbers of the form $x^2 = 1$ or $0$. Meaning any two squares can equal either 0,1 or 2.
+Every prime p is congruent to $1 \pmod 4$.
+
+
 \end{homeworkProblem}
 
 \pagebreak
@@ -177,6 +290,8 @@
 (15 pts) A common way of storing passwords on a computer is to use DES with a password as the key to encrypt a fixed plaintext (often just 000...0).  The ciphertext is then stored in a file.  When someone log in, the procedure is repeated and the ciphertexts are compared.  Why is this a better method than using the password as the plaintext and a fixed key?
 
 \solution
+
+If there was a fixed key, then the moment the key is found any password can be recovered by Eve by reversing DES. On the other hand if the password is the key, then recovering any password is just as hard as breaking DES on any the individual keys.
 
 \end{homeworkProblem}
 
@@ -210,22 +325,50 @@ It is an ElGamal ciphertext with the following parameters:
 
 and your private random integer was $a = 7899$
 
-You also know that i n order to translate the plaintext back into ordinary English text, you need to know how alphabetic characters were “encoded” as elements in $\mathbb{Z}_n$.  Each element of $\mathbb{Z}_n$ represent three alphabetic characters as in the following example:
+You also know that in order to translate the plaintext back into ordinary English text, you need to know how alphabetic characters were “encoded” as elements in $\mathbb{Z}_n$.  Each element of $\mathbb{Z}_n$ represent three alphabetic characters as in the following example:
 \begin{verbatim}
-DOG → 3x26 2 + 14x26 +  6 =  2398 
-CAT → 2x26 2 +  0x26 + 19 =  1371 
-ZZZ → 25x26 2 + 25x26 + 25 = 17575 
+DOG → 3x26^2 + 14x26 +  6 =  2398 
+CAT → 2x26^2 +  0x26 + 19 =  1371 
+ZZZ → 25x26^2 + 25x26 + 25 = 17575 
 \end{verbatim}
 Decrypt the message (who sent it?) , also explain why it is good that the first element in each pair is not the same.
 
 \solution
+
+The following python script was used to decrypt the cyphertext
+\begin{verbatim}
+def ElGamal( r, t):
+    m = pow((r),(31846-7899),31847)
+    m = (t*m) % 31847
+    squ = m//(26**2)
+    ten = (m-(squ*26*26))//26
+    one = (m-(squ*26*26) - (ten*26))
+
+    print( chr( ord('a')+squ) + chr( ord('a')+ten)+ chr( ord('a')+one) ,end="")
+\end{verbatim}
+
+The plaintext reads (with spaces so \LaTeX stops throwing a fit):
+\textit{one ring to rule them all one ring to find them one ring to bring them all and in the darkness bind them in the land of mordor where the shadows lie}
+
+
+In all likelihood this message was sent by a nerd. If you're looking for a character for Lord of the Rings, Gandalf seems like a good bet possibly although he never actually recites the entire poem nor the entirety of the message here. A hobbit is another possibility since they resist evil. Definitely not an elf since hearing the "Black Speech" inflicts physical pain upon them. A case could be made that the sender was a free person in Gondor or Rohan since the poem was supposivly written by a poet from one of those places. In all likelyhood though the peoples of Middle Earth have no need for computational cryptography so I going to go with a nerd.
+
+It is good that the first element in each pair is unique, if $r$ and by extension $k$, are the same if Eve finds any $m_i$ then she can find any $m_j$ based on the same $k$.
+
+\begin{align*}
+t_1r^{-a} &\equiv m_1 \mod p \\
+r^{-a} &\equiv m_1/t_1 \mod p \\
+r^{-a} &\equiv m_1/t_1 \mod p \\
+t_2r^{-a} &\equiv t_2m_1/t_1 \mod p \\
+t_2r^{-a} &\equiv m_2 \mod p \\
+\end{align*}
 
 \end{homeworkProblem}
 
 \pagebreak
 
 \begin{homeworkProblem}
-(15 pts)  Find all the prime numbers p such that 
+(15 pts)  Find all the prime numbers $p$ such that 
 \renewcommand{\labelenumi}{\alph{enumi})}
 \begin{enumerate}
 \item  $p| 2^p+1$
@@ -233,6 +376,20 @@ Decrypt the message (who sent it?) , also explain why it is good that the first 
 \end{enumerate}
 
 \solution
+\begin{enumerate}
+\item 
+$p|2^p +1$ can be rewritten as:
+\begin{align*}
+2^p +1 \pmod p = 0 \\
+2^p = -1 \pmod p
+\end{align*}
+And by \textbf{Fermat's Little Theorem} we know that 
+$$-1 = 2 \pmod p$$
+Which is only true when $p = 3$
+
+\item There are none, by similar reasoning to above we have $1 = 2 \pmod p$ which is a contradiction.
+\end{enumerate}
+
 
 \end{homeworkProblem}
 
@@ -248,6 +405,10 @@ Note that $f(0) \equiv M \pmod p$
 I keep the polynomial secrete but I share $p$ and give each of them a $( x_i ,y_i)$ pair.  Three of them finally got together and agreed to try to solve my secret Lauren, Cohen and Kirian: $(1,8)$, $(3,10)$ and $(5,11)$ .  The trouble is they can’t agree on the math, so they ask you for help to solve this.  Calculate the \textit{Lagrange Interpolating Polynomial} and identify the secret $(M)$ .
 
 \solution
+
+$$f(x) =\left(-\frac{1}{8}x^2\right)+1.5x+15-\left(\frac{67}{8}\right)$$
+$$f(x) = 2x^2+10x+ 13\pmod{17}$$
+$$M = 6.625 = 13 \pmod{17} $$
 
 \end{homeworkProblem}
 
