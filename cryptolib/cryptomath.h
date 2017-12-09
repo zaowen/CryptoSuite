@@ -78,6 +78,18 @@ namespace crypto
      */
     void
         random_prime( mpz_t,int );
+
+    bool
+            factor_fermat( mpz_t, mpz_t, mpz_t);
+
+    bool
+            is_square( mpz_t );
+
+    bool
+            factor_PollardRho( mpz_t, mpz_t);
+
+    bool
+            factor_Pollardp1( mpz_t, mpz_t);
 }
 
 #endif //CRYPTOMATH_H

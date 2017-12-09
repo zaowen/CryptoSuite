@@ -100,13 +100,25 @@ namespace {
         EXPECT_FALSE( crypto::isPrime_Fermat( a ) );
     }
 
-    TEST( RANDPRIMETest, Base){
-        mpz_t a;
+    TEST( FERMATFACTORTest, Base){
+        mpz_t a,p,q;
         mpz_init( a );
-        crypto::random_prime( a , 100);
-        gmp_printf("Large Random: %Z\n", a);
+        mpz_set_ui(a, 295927);
 
-        EXPECT_FALSE(false);
+        crypto::factor_fermat( a, p, q);
+        EXPECT_EQ( 547, mpz_get_si(p) );
+        EXPECT_EQ( 541, mpz_get_si(q) );
+
+    }
+
+    TEST( POLLARDROHFACTORTest, Base){
+        mpz_t a,d;
+        mpz_init( a );
+        mpz_set_ui(a, 8051);
+
+        crypto::factor_PollardRho( a, d);
+        EXPECT_EQ( 97, mpz_get_si(d) );
+
     }
 
 }  // namespace

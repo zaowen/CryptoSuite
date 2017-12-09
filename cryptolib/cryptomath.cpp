@@ -182,4 +182,74 @@ namespace crypto
 
                 }
 
+      bool
+            is_square(mpz_t n)
+            {
+                    mpz_t r;
+                    mpz_init(r);
+                    return mpz_root( r, n, 2);
+            }
+
+      bool
+            factor_fermat( mpz_t n , mpz_t p, mpz_t q )
+            {
+                    mpz_t i,i2,m;
+                    mpz_inits(i,i2,m,p,q,NULL);
+
+                    mpz_set_ui( i , 1);
+
+                    mpz_mul( i2 , i , i);
+                    mpz_add( m , n , i2);
+
+                    while( !is_square( m ) ){
+                            mpz_add_ui( i , i , 1);
+                            mpz_mul( i2 , i , i);
+                            mpz_add( m , n , i2);
+                    }
+
+                    mpz_root(m, m, 2);
+
+                    mpz_add(p, m , i );
+                    mpz_sub(q, m , i );
+
+                    return true;
+            }
+
+    bool
+            factor_Pollardp1( mpz_t, mpz_t)
+            {
+                    return true;
+            }
+
+
+    bool
+            factor_PollardRho( mpz_t n, mpz_t d)
+            {
+                    mpz_t x, y,rop;
+                    mpz_inits( x, y, rop, d,NULL);
+
+                  //g(x) = (x^2 +1)
+                    do{
+                           //g(x)
+                            mpz_mul(x,x,x);
+                            mpz_add_ui(x,x,1);
+
+                           //g(g(y))
+                            mpz_mul(y,y,y);
+                            mpz_add_ui(y,y,1);
+
+                            mpz_mul(y,y,y);
+                            mpz_add_ui(y,y,1);
+
+                           //|x-y|
+                            mpz_sub(rop,x,y);
+                            mpz_abs(rop,rop);
+
+                            gcd( d, n, rop);
+
+                    } while( mpz_cmp_ui(d, 1) == 0 );
+
+                    return mpz_cmp(d, n);
+            }
+
 }
