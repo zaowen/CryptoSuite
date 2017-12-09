@@ -111,13 +111,22 @@ namespace {
 
     }
 
-    TEST( POLLARDROHFACTORTest, Base){
+    TEST( POLLARDRHOFACTORTest, Base){
         mpz_t a,d;
         mpz_init( a );
         mpz_set_ui(a, 8051);
 
         crypto::factor_PollardRho( a, d);
         EXPECT_EQ( 97, mpz_get_si(d) );
+    }
+
+    TEST( POLLARDP1FACTORTest, Base){
+        mpz_t a,d;
+        mpz_init( a );
+        mpz_set_ui(a, 299);
+
+        crypto::factor_PollardRho( a, d);
+        EXPECT_EQ( 13, mpz_get_si(d) );
 
     }
 

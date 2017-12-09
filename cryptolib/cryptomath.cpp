@@ -215,41 +215,95 @@ namespace crypto
                     return true;
             }
 
-    bool
-            factor_Pollardp1( mpz_t, mpz_t)
-            {
-                    return true;
-            }
+      void
+              chooseB( mpz_t B, mpz_t n)
+              {
+                      mpz_root(B,n,3);
+              }
+
+      void
+              smooth( mpz_t m, mpz_t b , mpz_t n ) {
+
+                      mpz_set(m , b);
+
+                      while( mpz_cmp( m , n) < 0 )
+                      {
+                              mpz_mul(m,m,b);
+                      }
+
+                      mpz_divexact( m, m, b );
+              }
+      bool
+              factor_Pollardp1( mpz_t n , mpz_t g)
+              {
+                      mpz_t M,b,a,B,m;
+                      mpz_inits( M, a, g, b, B, m, NULL);
+                      mpz_set_ui( a, 2);
+                      mpz_set_ui( b, 2);
+
+                      //choose a Smoothness based on n;
+                      chooseB(B,n);
+
+                      smooth( m, b, n);
+                      mpz_mul( M, M, m);
+                      mpz_add_ui(b, b, 1);
+
+                      while( mpz_cmp(b,B) >= 0 )
+                      {
+                              if(isPrime_Fermat( b ) )
+                              {
+                                      smooth( m, b,n);
+                                      mpz_mul( M, M, m);
+                              }
+                              mpz_add_ui(b, b, 2);
+                      }
+
+                      mpz_powm( a, a, M, n);
+
+                      gcd( g, a, n);
+
+                      if( mpz_cmp_ui(g, 1) == 0 )
+                      {
+                              return false;
+                      }
+
+                      if( mpz_cmp(g, n) >= 0 )
+                      {
+                              return false;
+                      }
+
+                      return true;
+              }
 
 
-    bool
-            factor_PollardRho( mpz_t n, mpz_t d)
-            {
-                    mpz_t x, y,rop;
-                    mpz_inits( x, y, rop, d,NULL);
+      bool
+              factor_PollardRho( mpz_t n, mpz_t d)
+              {
+                      mpz_t x, y,rop;
+                      mpz_inits( x, y, rop, d,NULL);
 
-                  //g(x) = (x^2 +1)
-                    do{
-                           //g(x)
-                            mpz_mul(x,x,x);
-                            mpz_add_ui(x,x,1);
+                      //g(x) = (x^2 +1)
+                      do{
+                              //g(x)
+                              mpz_mul(x,x,x);
+                              mpz_add_ui(x,x,1);
 
-                           //g(g(y))
-                            mpz_mul(y,y,y);
-                            mpz_add_ui(y,y,1);
+                              //g(g(y))
+                              mpz_mul(y,y,y);
+                              mpz_add_ui(y,y,1);
 
-                            mpz_mul(y,y,y);
-                            mpz_add_ui(y,y,1);
+                              mpz_mul(y,y,y);
+                              mpz_add_ui(y,y,1);
 
-                           //|x-y|
-                            mpz_sub(rop,x,y);
-                            mpz_abs(rop,rop);
+                              //|x-y|
+                              mpz_sub(rop,x,y);
+                              mpz_abs(rop,rop);
 
-                            gcd( d, n, rop);
+                              gcd( d, n, rop);
 
-                    } while( mpz_cmp_ui(d, 1) == 0 );
+                      } while( mpz_cmp_ui(d, 1) == 0 );
 
-                    return mpz_cmp(d, n);
-            }
+                      return mpz_cmp(d, n);
+              }
 
 }

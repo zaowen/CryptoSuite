@@ -90,6 +90,12 @@ namespace crypto
 
     bool
             factor_Pollardp1( mpz_t, mpz_t);
+
+    void
+            chooseB( mpz_t, mpz_t);
+
+    void
+            smooth( mpz_t, mpz_t, mpz_t);
 }
 
 #endif //CRYPTOMATH_H
