@@ -22,7 +22,7 @@ CXXFLAGS += $(LIBS)
 # created to the list.
 TESTS = RSA_unittest
 
-MAIN = RSA
+MAIN = KeyGen Encrypt Decrypt
 
 HEADERS = $(CRYPTOLIB_DIR)/*.h
 
@@ -34,13 +34,19 @@ tests : $(TESTS)
 clean :
 	rm -f $(MAIN) $(TESTS) gtest.a gtest_main.a *.o
 
-RSA.o : RSA.cpp
-	$(CXX) $(CPPFLAGS) -I$(CRYPTOLIB_DIR) $(CXXFLAGS) -c RSA.cpp
-
 cryptomath.o : $(CRYPTOLIB_DIR)/cryptomath.cpp
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(CRYPTOLIB_DIR)/cryptomath.cpp
 
-RSA : RSA.o cryptomath.o
-	$(CXX) $(CPPFLAGS) -I$(CRYPTOLIB_DIR) cryptomath.o $(CXXFLAGS) RSA.cpp
+%.o : %.cpp
+	$(CXX) $(CPPFLAGS) -I$(CRYPTOLIB_DIR) $(CXXFLAGS) -c $<
 
+
+KeyGen : KeyGen.o cryptomath.o
+	$(CXX) $(CPPFLAGS) -I$(CRYPTOLIB_DIR) -o $@ cryptomath.o $(CXXFLAGS) $<
+
+Encrypt : Encrypt.o cryptomath.o
+	$(CXX) $(CPPFLAGS) -I$(CRYPTOLIB_DIR) -o $@ cryptomath.o $(CXXFLAGS) $<
+
+Decrypt : Decrypt.o cryptomath.o
+	$(CXX) $(CPPFLAGS) -I$(CRYPTOLIB_DIR) -o $@ cryptomath.o $(CXXFLAGS) $<
 
