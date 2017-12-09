@@ -2,6 +2,7 @@
 #define CRYPTOMATH_H
 
 #include <gmpxx.h>
+#include <vector>
 
 
 namespace crypto
@@ -96,6 +97,34 @@ namespace crypto
 
     void
             smooth( mpz_t, mpz_t, mpz_t);
+
+    void 
+            Sundaram( size_t , std::vector<size_t>&);
+
+    size_t
+            Quadratic_Seive( size_t n );
+
+   size_t
+           make_dep( size_t n );
+
+    /*
+      Computes the Euler Totent function on the second element
+      The Totent Function is the number of numbers less than n 
+      such that gcd(n m) = 1
+
+       places the return value in the first argument
+     */
+   void
+           EulerTotent(  mpz_t, mpz_t );
+
+    /*
+      Returns true if the first element is a primitive root mod 
+      the second element
+
+      False otherwise
+     */
+   bool
+           is_Generator( mpz_t, mpz_t );
 }
 
 #endif //CRYPTOMATH_H
