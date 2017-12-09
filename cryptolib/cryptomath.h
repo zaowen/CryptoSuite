@@ -77,7 +77,7 @@ namespace crypto
        places the return value in the first argument
      */
     void
-        random_prime( mpz_t,int );
+            random_prime( mpz_t,int );
 
     bool
             factor_fermat( mpz_t, mpz_t, mpz_t);

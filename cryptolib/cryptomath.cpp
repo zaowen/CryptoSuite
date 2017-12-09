@@ -118,7 +118,7 @@ namespace crypto
                         if( mpz_divisible_ui_p(n, 2) != 0 )
                                 return false;
 
-                        return isPrime_Fermat( n, 3 );
+                        return isPrime_Fermat( n, 5 );
                 }
 
         bool
@@ -240,6 +240,7 @@ namespace crypto
                       mpz_inits( M, a, g, b, B, m, NULL);
                       mpz_set_ui( a, 2);
                       mpz_set_ui( b, 2);
+                      mpz_set_ui(M,1);
 
                       //choose a Smoothness based on n;
                       chooseB(B,n);
@@ -248,7 +249,7 @@ namespace crypto
                       mpz_mul( M, M, m);
                       mpz_add_ui(b, b, 1);
 
-                      while( mpz_cmp(b,B) >= 0 )
+                      while( mpz_cmp(b,B) <= 0 )
                       {
                               if(isPrime_Fermat( b ) )
                               {
@@ -260,6 +261,7 @@ namespace crypto
 
                       mpz_powm( a, a, M, n);
 
+                      mpz_sub_ui( a, a, 1 );
                       gcd( g, a, n);
 
                       if( mpz_cmp_ui(g, 1) == 0 )
