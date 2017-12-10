@@ -1,15 +1,14 @@
 #include <iostream>
+#include <string>
 
 #include <gmpxx.h>
 #include "cryptomath.h"
 
-#define k 2048
 
 bool chooseE( mpz_t e, mpz_t totent )
 {
     mpz_t g;
 
-    //crypto::random_prime( e , 3 );
     mpz_init_set_ui( e, 65537 );
     crypto::gcd(g, e, totent );
 
@@ -24,11 +23,30 @@ bool chooseE( mpz_t e, mpz_t totent )
     return true;
 }
 
-int main()
+bool validate_key( size_t k )
+{
+   return (k >= 512) && (k & 0x7 != 0);
+}
+
+int main( int argc, char* argv[])
 {
     mpz_t p, q, n;
     mpz_t p1, q1,totent; // p-1, q-1
     mpz_t e,d;
+
+   if( argc <  2 )
+   {
+      fprintf( stderr, "Useage:\n\t%s <key-size>\n", argv[0] );
+      return -1;
+   }
+
+   size_t k = std::stoul( argv[1], nullptr, 10);
+
+   if( validate_key(  k ) )
+   {
+      fprintf( stderr, "Keysize must be divisible by 8 and greater than 2^32", argv[0] );
+      return -1;
+   }
 
     mpz_inits( n, p1,q1,totent, NULL );
 

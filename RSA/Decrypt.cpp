@@ -11,10 +11,14 @@ int getkey( FILE* f ,size_t &k, mpz_t d, mpz_t n  ){
 
         mpz_inits(d,n,NULL);
 
-        fscanf(f, "%ld" , &k);
-        mpz_inp_str(d , f, 16);
-        mpz_inp_str(n , f, 16);
-        mpz_inp_str(d , f, 16);
+        if( fscanf(f, "%ld" , &k) == EOF )
+            return 0
+
+        if( mpz_inp_str(n , f, 16) )
+            return 0
+
+        if( mpz_inp_str(d , f, 16) )
+            return 0
 
         return 0;
 }
@@ -29,29 +33,32 @@ int main( int argc, char* argv[]){
 
         FILE* keyfile;
 
-        if( argc >= 2 )
+        if( argc <  2 )
         {
+           fprintf( stderr, "Useage:\n\t%s <key-file>\n", argv[0] );
+           return -1;
+        }
 
-                keyfile = fopen( argv[1], "r" );
+        keyfile = fopen( argv[1], "r" );
 
-                if( getkey( keyfile , k , d , n))
-                {
-                        return -1;
-                }
+        if( getkey( keyfile , k , d , n))
+        {
+           fprintf( stderr, "Error in Private keyfile", argv[0] );
+           return -1;
+        }
 
 
-                mpz_t m ,c;
+        mpz_t m ,c;
 
-                mpz_inits(m,c,NULL);
+        mpz_inits(m,c,NULL);
 
-                char ptr[k/8+1];
-                size_t result = mpz_inp_str( c,stdin, 16);
+        char ptr[k/8+1];
+        size_t result = mpz_inp_str( c,stdin, 16);
 
-                while( result ){
-                        decrypt(c,m,d,n);
-                        mpz_export(ptr,NULL,1,k/8,1,0, m);
-                        fwrite( ptr, 1, k/8, stdout);
-                        result = mpz_inp_str( c,stdin, 16);
-                }
+        while( result ){
+           decrypt(c,m,d,n);
+           mpz_export(ptr,NULL,1,k/8,1,0, m);
+           fwrite( ptr, 1, k/8, stdout);
+           result = mpz_inp_str( c,stdin, 16);
         }
 }

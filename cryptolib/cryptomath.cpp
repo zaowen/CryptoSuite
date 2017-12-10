@@ -217,7 +217,7 @@ namespace crypto
       }
 
    void
-      smooth( mpz_t B, mpz_t n)
+      smoothness( mpz_t B, mpz_t n)
       {
          mpz_root(B,n,3);
       }
@@ -340,6 +340,8 @@ namespace crypto
    void 
       shanks_square( mpz_t r, mpz_t N )
       {
+         mpz_inits(r,N,NULL);
+         /*
          uint64_t D, Po, P, Pprev, Q, Qprev, q, b, r, s;
          uint32_t L, B, i;
          s = (uint64_t)(sqrtl(N)+0.5);
@@ -356,7 +358,7 @@ namespace crypto
                P = b*Q - P;
                q = Q;
                Q = Qprev + b*(Pprev - P);
-               r = (uint64_t)(sqrtl(Q)+0.5);
+               //r = (uint64_t)(sqrtl(Q)+0.5);
                if (!(i & 1) && r*r == Q) break;
                Qprev = q;
                Pprev = P;
@@ -380,30 +382,8 @@ namespace crypto
             if (r != 1 && r != N) return r;
          }
          return 0;
+         */
       }
-
-   size_t
-      make_dep( size_t n )
-      {
-         size_t x = n;
-         for(int i = 0; i < 1000; i++)
-         {
-            //x= pow(sqrt(n)+i,2) - n;
-            //if(list_factor(((x*x) % n), ))
-         }
-         return x;
-      }
-   size_t
-      Quadratic_Seive( size_t n)
-      {
-         std::vector<size_t> p;
-
-         Sundaram( n, p);
-
-         //size_t d = make_dep( n );
-         return 1;
-      }
-
 
    void
       EulerTotent( mpz_t t, mpz_t n)
