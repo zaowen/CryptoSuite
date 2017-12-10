@@ -1,4 +1,4 @@
-MAIN = encrypt decrypt
+MAIN = encrypt decrypt attack freq
 
 HEADERS = $(CRYPTOLIB_DIR)/*.h
 
