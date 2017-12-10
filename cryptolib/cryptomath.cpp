@@ -1,5 +1,6 @@
 #include "cryptomath.h"
-
+#include <inttypes.h>
+#include <math.h>
 #include <ctime>
 
 namespace crypto
@@ -216,14 +217,15 @@ namespace crypto
       }
 
    void
-      chooseB( mpz_t B, mpz_t n)
+      smooth( mpz_t B, mpz_t n)
       {
          mpz_root(B,n,3);
       }
 
    void
-      smooth( mpz_t m, mpz_t b , mpz_t n ) {
+      lastFactor( mpz_t m, mpz_t b , mpz_t n ) {
 
+         mpz_init(m);
          mpz_set(m , b);
 
          while( mpz_cmp( m , n) < 0 )
@@ -233,6 +235,7 @@ namespace crypto
 
          mpz_divexact( m, m, b );
       }
+
    bool
       factor_Pollardp1( mpz_t n , mpz_t g)
       {
@@ -243,14 +246,14 @@ namespace crypto
          mpz_set_ui(M,1);
 
          //choose a Smoothness based on n;
-         chooseB(B,n);
+         smoothness(B,n);
          Sundaram( mpz_get_ui(B) , p);
          auto i = p.begin();
 
          while( i != p.end() )
          {
             mpz_set_ui( b, *i );
-            smooth( m, b, n);
+            lastFactor( m, b, n);
             mpz_mul( M, M, m);
             i++;
          }
@@ -328,6 +331,55 @@ namespace crypto
                p.push_back( i*2 + 1);
             }
          }
+      }
+
+#define nelems(x) (sizeof(x) / sizeof((x)[0]))
+
+   const int multiplier[] = {1, 3, 5, 7, 11, 3*5, 3*7, 3*11, 5*7, 5*11, 7*11, 3*5*7, 3*5*11, 3*7*11, 5*7*11, 3*5*7*11};
+
+   void 
+      shanks_square( mpz_t r, mpz_t N )
+      {
+         uint64_t D, Po, P, Pprev, Q, Qprev, q, b, r, s;
+         uint32_t L, B, i;
+         s = (uint64_t)(sqrtl(N)+0.5);
+         if (s*s == N) return s;
+         for (int k = 0; k < nelems(multiplier) && N <= UINT64_MAX/multiplier[k]; k++) {
+            D = multiplier[k]*N;
+            Po = Pprev = P = sqrtl(D);
+            Qprev = 1;
+            Q = D - Po*Po;
+            L = 2 * sqrtl( 2*s );
+            B = 3 * L;
+            for (i = 2 ; i < B ; i++) {
+               b = (uint64_t)((Po + P)/Q);
+               P = b*Q - P;
+               q = Q;
+               Q = Qprev + b*(Pprev - P);
+               r = (uint64_t)(sqrtl(Q)+0.5);
+               if (!(i & 1) && r*r == Q) break;
+               Qprev = q;
+               Pprev = P;
+            };
+            if (i >= B) continue;
+            b = (uint64_t)((Po - P)/r);
+            Pprev = P = b*r + P;
+            Qprev = r;
+            Q = (D - Pprev*Pprev)/Qprev;
+            i = 0;
+            do {
+               b = (uint64_t)((Po + P)/Q);
+               Pprev = P;
+               P = b*Q - P;
+               q = Q;
+               Q = Qprev + b*(Pprev - P);
+               Qprev = q;
+               i++;
+            } while (P != Pprev);
+            r = gcd(N, Qprev);
+            if (r != 1 && r != N) return r;
+         }
+         return 0;
       }
 
    size_t
