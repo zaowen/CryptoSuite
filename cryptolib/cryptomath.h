@@ -9,6 +9,12 @@ namespace crypto
 {
 
    /*
+      Initializes GMP rand with Deterministic values;
+    */
+   void
+      TESTRAND();
+
+   /*
       Initalizes all return values
       stores the return value in the first argument
     */
@@ -177,7 +183,7 @@ NECESSARILY FAIL IF THE FIRST ARGUMENT IS GREATER THAN
       places the return value in the first argument
     */
    void
-      shanks_square( mpz_t , mpz_t );
+      factor_Shank( mpz_t , mpz_t );
 
    /*
       Computes the Euler Totent function on the second element

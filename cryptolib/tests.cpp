@@ -89,6 +89,7 @@ namespace {
    TEST( FERMATest, Basic){
       mpz_t a;
       mpz_init_set_ui( a, 11 );
+      crypto::TESTRAND();
 
       EXPECT_TRUE( crypto::isPrime_Fermat( a ) );
    }
@@ -96,6 +97,7 @@ namespace {
    TEST( FERMATest, BasicFalse ){
       mpz_t a;
       mpz_init_set_ui( a, 100 );
+      crypto::TESTRAND();
 
       EXPECT_FALSE( crypto::isPrime_Fermat( a ) );
    }
@@ -129,13 +131,14 @@ namespace {
       EXPECT_EQ( 13, mpz_get_si(d) );
    }
 
-   /*
-      TEST( QUADSEIVETest, Base){
-      size_t n;
-      size_t d = crypto::Quadratic_Seive( n );
-      EXPECT_EQ( 1093, d );
-      }
-    */
+   TEST( SHANKSTest, Base){
+      mpz_t a,d;
+      mpz_init( a );
+      mpz_set_ui(a, 299);
+
+      crypto::factor_Shank( d, a);
+      EXPECT_EQ( 13, mpz_get_si(d) );
+   }
 
    TEST( EULERTOTENTest, Base1){
       mpz_t m, n;

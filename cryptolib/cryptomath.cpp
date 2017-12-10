@@ -10,6 +10,15 @@ namespace crypto
    gmp_randstate_t _R_STATE;
 
    void
+      TESTRAND()
+      {
+      gmp_randinit_default (_R_STATE);
+      gmp_randseed_ui(_R_STATE, 101092 );
+
+      _RAND_INIT_ = true;
+      }
+
+   void
       gcd( mpz_t g, mpz_t a, mpz_t b)
       {
          mpz_t c,d;
@@ -338,51 +347,134 @@ namespace crypto
    const int multiplier[] = {1, 3, 5, 7, 11, 3*5, 3*7, 3*11, 5*7, 5*11, 7*11, 3*5*7, 3*5*11, 3*7*11, 5*7*11, 3*5*7*11};
 
    void 
-      shanks_square( mpz_t r, mpz_t N )
+      factor_Shank( mpz_t r, mpz_t N )
       {
-         mpz_inits(r,N,NULL);
-         /*
-         uint64_t D, Po, P, Pprev, Q, Qprev, q, b, r, s;
-         uint32_t L, B, i;
-         s = (uint64_t)(sqrtl(N)+0.5);
-         if (s*s == N) return s;
-         for (int k = 0; k < nelems(multiplier) && N <= UINT64_MAX/multiplier[k]; k++) {
-            D = multiplier[k]*N;
-            Po = Pprev = P = sqrtl(D);
-            Qprev = 1;
-            Q = D - Po*Po;
-            L = 2 * sqrtl( 2*s );
-            B = 3 * L;
-            for (i = 2 ; i < B ; i++) {
-               b = (uint64_t)((Po + P)/Q);
-               P = b*Q - P;
-               q = Q;
-               Q = Qprev + b*(Pprev - P);
+         mpz_init(r);
+         mpz_t D, Po, P, Pprev, Q, Qprev, q, b, s;
+         mpz_t L, B, rop, one;
+         mpz_inits( D, Po, P, Pprev, Q, Qprev, q, b, s, L, B,rop,one, NULL);
+         uint32_t i;
+
+         mpz_set_ui( one , 1);
+         //s = (uint64_t)(sqrtl(N)+0.5);
+         if( mpz_root(s, N, 2 ) )
+         {
+            mpz_set( r, s );
+            return;
+         }
+
+         //for (int k = 0; k < nelems(multiplier) && N <= UINT64_MAX/multiplier[k]; k++) {
+         for (size_t k = 0; k < nelems(multiplier); k++) {
+
+            //D = multiplier[k]*N;
+            mpz_mul_ui( D, N, multiplier[k] );
+
+            //Po = Pprev = P = sqrtl(D);
+            mpz_root( P, D, 2);
+            mpz_set( Pprev, P);
+            mpz_set( Po ,P );
+
+            //Qprev = 1;
+            mpz_set_ui(Qprev, 1);
+
+            //Q = D - Po*Po;
+            mpz_mul( rop, Po, Po);
+            mpz_sub( Q, D, rop);
+
+            //L = 2 * sqrtl( 2*s );
+            mpz_mul( rop, s, s);
+            mpz_sqrt(rop, rop);
+            mpz_mul_ui( L, s, 2);
+
+
+            //B = 3 * L;
+            mpz_mul_ui( B, L, 3);
+
+            //for (i = 2 ; i < B ; i++) {
+            for (i = 2 ; mpz_cmp_ui( B, i ) > 0 ; i++) {
+
+               //b = (uint64_t)((Po + P)/Q);
+               mpz_add(rop, Po, P);
+               mpz_tdiv_q(b, rop, Q);
+
+               //P = b*Q - P;
+               mpz_mul( rop, b, Q);
+               mpz_sub( P, rop, P);
+
+
+               //q = Q;
+               mpz_set( q, Q );
+
+               //Q = Qprev + b*(Pprev - P);
+               mpz_sub(rop, Pprev, P);
+               mpz_mul(rop, rop, b);
+               mpz_add(Q, Qprev, rop);
+
                //r = (uint64_t)(sqrtl(Q)+0.5);
-               if (!(i & 1) && r*r == Q) break;
-               Qprev = q;
-               Pprev = P;
+               mpz_sqrt(r, Q);
+
+               mpz_mul(rop, r, r);
+               //if (!(i & 1) && r*r == Q) break;
+               if ( !(i & 1) && mpz_cmp(rop, Q) == 0) break;
+
+               //Qprev = q;
+               mpz_set( Qprev, q);
+
+               //Pprev = P;
+               mpz_set( Pprev, P);
             };
-            if (i >= B) continue;
-            b = (uint64_t)((Po - P)/r);
-            Pprev = P = b*r + P;
-            Qprev = r;
-            Q = (D - Pprev*Pprev)/Qprev;
+
+            //if (i >= B) continue;
+            if ( mpz_cmp_ui( B, i ) <= 0 ) continue;
+
+            //b = (uint64_t)((Po - P)/r);
+            mpz_sub(rop, Po, P);
+            mpz_tdiv_q(b, rop, r);
+
+            //Pprev = P = b*r + P;
+            mpz_mul(rop, b, r);
+            mpz_add(Pprev, rop, P);
+            mpz_set(P, Pprev);
+
+            //Qprev = r;
+            mpz_set( Qprev, r);
+
+            //Q = (D - Pprev*Pprev)/Qprev;
+            mpz_mul( rop, Pprev, Pprev);
+            mpz_sub( rop, D, rop);
+            mpz_tdiv_q( Q, rop, Qprev);
+
             i = 0;
             do {
-               b = (uint64_t)((Po + P)/Q);
-               Pprev = P;
-               P = b*Q - P;
-               q = Q;
-               Q = Qprev + b*(Pprev - P);
-               Qprev = q;
+               //b = (uint64_t)((Po + P)/Q);
+               mpz_add(rop, Po, P);
+               mpz_tdiv_q(b, rop, Q);
+
+               //Pprev = P;
+               mpz_set( Pprev, P);
+
+               //P = b*Q - P;
+               mpz_mul( rop, b, Q );
+               mpz_sub( P, rop, P );
+
+               //q = Q;
+               mpz_set( q, Q);
+
+               //Q = Qprev + b*(Pprev - P);
+               mpz_sub(rop, Pprev, P);
+               mpz_mul(rop, rop, b);
+               mpz_add(Q, Qprev, rop);
+
+               //Qprev = q;
+               mpz_set( Qprev, q);
                i++;
-            } while (P != Pprev);
-            r = gcd(N, Qprev);
-            if (r != 1 && r != N) return r;
+            } while (mpz_cmp( P , Pprev ) != 0 );
+            gcd( r, N, Qprev);
+            if ( mpz_cmp_ui(r, 1) != 0 && mpz_cmp(r,N) != 0 )
+               return;
          }
-         return 0;
-         */
+         mpz_set_ui(r, 0);
+         return;
       }
 
    void
