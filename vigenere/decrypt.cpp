@@ -25,17 +25,17 @@ int main( int argc, char*argv[])
       if( c >= 'a' && c <= 'z' )
       {
          c = c - 'a';
-         c = (c - key[i]) % 26;
+         c = (c - (key[i] - 'a')) % 26;
          if( c < 0)
          {
             c = c + 26;
          }
          c = c + 'a';
-      }
 
       fputc(c, stdout );
       i = (i + 1) % keylen;
 
+      }
       c = fgetc( stdin );
    }
 } 
