@@ -99,7 +99,7 @@ int main( int argc, char*argv[])
    //DEBUG cout << text << endl;
 
    auto ch = text.begin();
-   
+
    int j = 0;
    for( auto i : text )
    {
