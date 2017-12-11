@@ -171,7 +171,7 @@ namespace DES
       {
          for( int i = 0; i < 4; i++)
          {
-            m = DES::round( m, k, i );
+            m = round( m, k, i );
          }
 
          return m;
@@ -182,15 +182,15 @@ namespace DES
       {
          short L,R;
 
-         DES::LR( c, L, R);
-         c = DES::unLR(R,L);
+         LR( c, L, R);
+         c = unLR(R,L);
 
          for( int i = 0; i < 4; i++)
          {
-            c = DES::round( c, k, ( 3 - i ) );
+            c = round( c, k, ( 3 - i ) );
          }
-         DES::LR( c, L, R);
-         c = DES::unLR(R,L);
+         LR( c, L, R);
+         c = unLR(R,L);
          return c;
 
       }

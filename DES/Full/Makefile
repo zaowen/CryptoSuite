@@ -4,7 +4,7 @@
 
 # Points to the root of Google Test, relative to where this file is.
 # Remember to tweak this if you move this file.
-GTEST_DIR = ../googletest/googletest
+GTEST_DIR = ../../googletest/googletest
 
 # Where to find user code.
 LIB_DIR = .
@@ -12,7 +12,6 @@ LIB_DIR = .
 CPPFLAGS += -isystem $(GTEST_DIR)/include $(LIBS)
 
 TESTS = DES_unittest
-
 
 # All Google Test headers.  Usually you shouldn't change this
 # definition.
@@ -23,7 +22,7 @@ GTEST_HEADERS = $(GTEST_DIR)/include/gtest/*.h \
 CXXFLAGS += -g -Wall -Wextra -pthread 
 CXXFLAGS += $(LIBS)
 
-MAIN = encrypt decrypt diff3 diff4 $(TESTS)
+MAIN = encrypt $(TESTS) decrypt
 
 # House-keeping build targets.
 
