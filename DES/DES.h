@@ -72,6 +72,11 @@ namespace DES
    uint32_t
       prepKey( uint16_t );
 
+   void
+      charto12( uint8_t [], uint16_t []);
+
+   void 
+      charfrom12( uint16_t[], uint8_t[]);
 }
 
 #endif

@@ -134,4 +134,24 @@ namespace DES
          pk = pk | k;
          return pk;
       }
+
+   void
+      charto12( uint8_t from[], uint16_t to[])
+      {
+         to[0] = (from[0] << 4) | (from[1] >> 4);
+         to[1] = ((from[1] & 0xF ) << 8 ) | (from[2]);
+         to[2] = (from[3] << 4) | (from[4] >> 4);
+         to[3] = ((from[4] & 0xF ) << 8 ) | (from[5]);
+      }
+
+   void 
+      charfrom12( uint16_t from[], uint8_t to[])
+      {
+         to[0] = from[0] >> 4;
+         to[1] = ((from[0] & 0xF) << 4) | (from[1] >> 8);
+         to[2] = from[1] & 0xFF;
+         to[3] = from[2] >> 4;
+         to[4] = ((from[2] & 0xF) << 4) | (from[3] >> 8);
+         to[5] = from[3] & 0xFF;
+      }
 }
