@@ -154,4 +154,44 @@ namespace DES
          to[4] = ((from[2] & 0xF) << 4) | (from[3] >> 8);
          to[5] = from[3] & 0xFF;
       }
+
+   uint16_t 
+      getKey( char * str )
+      {
+         try{
+            return std::stoi( str, NULL, 16);
+         } catch( const std::exception& e){
+            fprintf( stderr, "PROBLEM INTERPRETING KEY" );
+            exit( -1 );
+         } 
+      }
+
+   uint16_t 
+      encrypt( uint16_t m , uint16_t k)
+      {
+         for( int i = 0; i < 4; i++)
+         {
+            m = DES::round( m, k, i );
+         }
+
+         return m;
+      }
+
+   uint16_t 
+      decrypt( uint16_t c , uint16_t k)
+      {
+         short L,R;
+
+         DES::LR( c, L, R);
+         c = DES::unLR(R,L);
+
+         for( int i = 0; i < 4; i++)
+         {
+            c = DES::round( c, k, ( 3 - i ) );
+         }
+         DES::LR( c, L, R);
+         c = DES::unLR(R,L);
+         return c;
+
+      }
 }

@@ -1,6 +1,7 @@
 #ifndef _DES_H_
 #define _DES_H_
 
+#include <string>
 #include <stdint.h>
 
 namespace DES
@@ -29,7 +30,7 @@ namespace DES
 
    /*
       Upper Level DES operation.Performs one full SDES round.
-   */
+    */
    uint16_t
       round( uint16_t, uint16_t, int );
 
@@ -42,30 +43,30 @@ namespace DES
    /*
       Seperates an input into the 6 left and right bits.
       For input into the f(R,K)
-   */
+    */
    void
       LR( uint16_t, short&, short& );
 
    /*
       Conjoins two 6 bit numbers into a single 12 bit word
-   */
+    */
    uint16_t
       unLR( short, short );
 
    /*
       Seperates an input into the 4 left and right bits.
       For input into the s-boxes
-   */
+    */
    void 
       sboxLR( short, short&, short& );
 
    /*
-   */
+    */
    short
       unsboxLR( short L , short R );
 
    /*
-   */
+    */
    short
       rotKey( uint32_t, int );
 
@@ -77,6 +78,15 @@ namespace DES
 
    void 
       charfrom12( uint16_t[], uint8_t[]);
+
+   uint16_t 
+      getKey( char * );
+
+   uint16_t
+      encrypt( uint16_t , uint16_t );
+
+   uint16_t
+      decrypt( uint16_t , uint16_t );
 }
 
 #endif

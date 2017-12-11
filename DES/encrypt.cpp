@@ -1,29 +1,7 @@
 #include "DES.h"
 #include <stdio.h>
-#include <string>
 #include <endian.h>
 
-uint16_t encrypt( uint16_t m , uint16_t k)
-{
-   uint16_t c = m;
-
-   for( int i = 0; i < 4; i++)
-   {
-      c = DES::round( c, k, i );
-   }
-
-   return c;
-}
-
-uint16_t getKey( char * str )
-{
-   try{
-      return std::stoi( str, NULL, 16);
-   } catch( const std::exception& e){
-      fprintf( stderr, "PROBLEM INTERPRETING KEY" );
-      exit( -1 );
-   } 
-}
 
 int main( int argc, char* argv[] )
 {
@@ -34,7 +12,7 @@ int main( int argc, char* argv[] )
       return -1;
    }
 
-   uint16_t key = getKey( argv[1] );
+   uint16_t key = DES::getKey( argv[1] );
 
    union {
       uint64_t u48;
@@ -54,7 +32,7 @@ int main( int argc, char* argv[] )
 
       for( int i = 0; i < 4; i ++)
       {
-         cb[i] = encrypt( cb[i], key );
+         cb[i] = DES::encrypt( cb[i], key );
       }
 
       buff.u48= 0;
@@ -71,7 +49,7 @@ int main( int argc, char* argv[] )
 
       for( int i = 0; i < 4; i ++)
       {
-         cb[i] = encrypt( cb[i], key );
+         cb[i] = DES::encrypt( cb[i], key );
       }
 
       buff.u48= 0;

@@ -2,31 +2,6 @@
 #include <stdio.h>
 #include <string>
 
-uint16_t decrypt( uint16_t c , uint16_t k)
-{
-   short L,R;
-
-   DES::LR( c, L, R);
-   uint16_t m = DES::unLR(R,L);
-
-   for( int i = 0; i < 4; i++)
-   {
-      m = DES::round( m, k, ( 3 - i ) );
-   }
-   DES::LR( m, L, R);
-   return  DES::unLR(R,L);
-
-}
-
-uint16_t getKey( char * str )
-{
-   try{
-      return std::stoi( str, NULL, 16);
-   } catch( const std::exception& e){
-      fprintf( stderr, "PROBLEM INTERPRETING KEY" );
-      exit( -1 );
-   } 
-}
 
 int main( int argc, char* argv[] )
 {
@@ -38,7 +13,7 @@ int main( int argc, char* argv[] )
    }
 
 
-   uint16_t key = getKey( argv[1] );
+   uint16_t key = DES::getKey( argv[1] );
 
    union {
       uint64_t u48;
@@ -59,7 +34,7 @@ int main( int argc, char* argv[] )
 
       for( int i = 0; i < 4; i ++)
       {
-         pb[i] = decrypt( pb[i], key );
+         pb[i] = DES::decrypt( pb[i], key );
       }
 
       buff.u48= 0;
