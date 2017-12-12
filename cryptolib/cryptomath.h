@@ -111,8 +111,8 @@ namespace crypto
       GMP implementation of the Pollard Rho factorizaion method.
       Initializes all return values
 
-      finds a factor of the first argument.
-      places the factor in the second argument
+      finds a factor of the second argument.
+      places the factor in the first argument
       returns true if a factor was found, false otherwise.
     */
    bool
@@ -131,8 +131,8 @@ NECESSARILY FAIL IF THE FIRST ARGUMENT IS GREATER THAN
 = 6.2 * 10 ^ 57
 = 2^192
 
-      finds a factor of the first argument.
-      places the factor in the second argument
+      finds a factor of the second argument.
+      places the factor in the first argument
       returns true if a factor was found, false otherwise.
     */
    bool

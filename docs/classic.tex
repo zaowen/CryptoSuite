@@ -1,0 +1,177 @@
+% !TEX root = DesignDocument.tex
+
+\chapter{Classic CryptoSystems}
+
+\section{Affine Cipher}
+
+The Affine Cipher is an example of a simple shift cipher and one of the oldest examples of cryptography.
+The cipher is performed by transforming each character with the function $f(x) = \alpha x + \beta \pmod{26}$.
+Letters are represented as nubers taking each character in the plaintext as a number from 0 to 25, with $a$ being 0, and $z= 25$.
+
+The 'key' to this cipher is choosing $\alpha$ and $\beta$. It is also where a naive implementation of this cipher can fail.
+Since the modualar arithmetic system we are working in is not prime the affine cipher is not a feild. 
+This means that depending on our choice of $\alpha$ and $\beta$ ( or as it turns out just $\alpha$ ) we could end up with an ambigious cryptosystem.
+For example for $\alpha = 13$ the letters n, p, l, t, and r all map to the same letter Making the message very difficult to recover.
+So for a funcitional affine system it is necessary that $f(x)$ be a one-to-one function. 
+This can be done easily by checking that $gcd(\alpha , 26) = 1$, if this is true then $\frac{1}{\alpha}$ exists and is unique.
+
+\subsection{implementation}
+The affine cipher provided is implemented in python for the basic setup and greatest common divisor checking.
+The input is then run through a sed transform command that performs the cipher.
+Decryption is done much the same way except the transform arguments are reversed.
+
+\section{Vigen\'ere Cipher}
+
+The Vigen\'ere Cipher is a simple cipher from the 16th century. 
+The way it functions is also rather simple.
+From a given keyword the value of the first letter of the plaintext is added to the value of the first letter of the key. 
+The value of the letter being its iteger representaion mod 26.
+This continues until the end of the key. At which point you start over with the begining of the key until the end of the plaintext.
+The resultant representations of numbers mod 26 are then converted back into letters and sent as the ciphertext.
+
+Decyption is simple if you know the key. 
+Simply by undoing the operation of encryption by subtracting the value of each letter of the key mod 26 the plaintext is reaquired.
+
+\subsection{ Implementation}
+
+Included is a C++ implementation of the Vigen\'ere cipher.
+The implementation is much the same as it is decribed above.
+The Vigen\'ere is built by navigating to \textit{Cryptosuite/vigenere} and running \textbf{make}. This builds \textit{attack}, \textit{decrypt} and \textit{encrypt}.
+
+\section{Frequency Calulator}
+The frequency calculator creates an array of 26 ints. It then reads from \textbf{stdin} until \textbf{EOF} is reached and then prints the frequencies.
+
+\section{Affine Cipher Attack}
+
+The affine cipher main problem (besides the existence of only 312 keys) is that it is frequency attacks.
+While known plaintext attacks are amazingly effective, with large enough ciphertext it is possible to break most affine ciphers.
+The attack provided works by calculating the frequency of each letter in the cipher text and then assuming the letter with the greatest frequency is 'e'.
+From there the algebra is simple to find $\alpha$ and $\beta$.
+
+
+\section{Vigen\'ere Cipher Attacks}
+
+Attacks on Vigen\'ere are more subtle than Affine.
+Since each letter is offset by a diffrent ammount basic frequency analysis will ususally yeild garbage and will not give you the key.
+instead the attack is performed in two steps
+
+\subsection{Find the key length}
+While not basic frequency analysis this method works on the same principle.
+The idea is that if the cipher text is placed next to itself plus some offset and then the letters are compared side by side, 
+the offset with the most sets of letters in common will be the key length.
+This is not freqency analysis but since we know that letters like 'e' and 't' are very common more matches will be found if the letters are mapped to the same place.
+
+This works very well on all but very short ciphertexts.
+An interesting result is that for short keys, the side-by-side matching tends to suspect keylengths in multiples of the actual keylength.
+This is however unimportant due to the nature of the cipher.
+
+\subsection{ Find the Key}
+
+Now that we know the key length finding the key is no harder than finding the key for the Affine cipher.
+In my implementation the ciphertext is partitioned by suspected key length offset and placed into buckets.
+Frequency analysis is then performed on each of those buckets and it is assumed that the largest character is 'e'.
+The program then simply finds the key character necessary to make that character 'e' and cobbles together a key.
+
+This sort of analysis can be fooled by intentional avoidance of the letter 'e' or by making sure not enough ciphertext encrypted by a single key is sent.
+These are odd use cases however and the attacks provided usually work.
+
+\subsection{ Implementation}
+
+Included is a C++ implementation of the Vigen\'ere cipher attack. 
+The implementation is much the same as it is decribed above.
+The Vigen\'ere attack is built by navigating to \textit{Cryptosuite/vigenere} and running \textbf{make}. This builds \textit{encrypt}, \textit{decrypt} and \textit{attack}.
+
+Running this program is as simple as running \textit{\$ ./attack < <ciphertext> }. The program will then print the guessed size of the key along with the guessed key.
+
+\section{ADFGX cipher}
+
+During the first World War two simmilar ciphers were used called playfair and ADFGX. 
+These ciphers worked by placing all possible letters into a grid that could then be used as a one-to-one function.
+The indexes of the letter to encrypt were then taken and scrambled in a way that is very difficult to undo without the key.
+Like vigen\'ere the key is a word or unique collection of letters.
+
+\subsection{ Description of Algorithm }
+
+\begin{table}[ht]
+\centering
+\begin{tabular}{ c c c c c }
+p&g&c&e&n \\
+p&q&o&z&r \\
+s&l&a&f&t \\
+m&d&v&i&w \\
+k&u&y&x&h
+\end{tabular}
+\caption{Grid of letters used in this C++ ADFGX implementation}
+\end{table}
+
+Then, as the name of the cipher suggests the letters ADFGX are placed along the top and bottom of the grid. 
+
+\begin{table}[ht]
+\centering
+\begin{tabular}{ c | c c c c c }
+ & A&D&F&G&X\\
+\hline
+A& p&g&c&e&n \\
+D& p&q&o&z&r \\
+F& s&l&a&f&t \\
+G& m&d&v&i&w \\
+X& k&u&y&x&h
+\end{tabular}
+\caption{ADFGX Labeled Grid of letters}
+\label{ADFGXGrid:1}
+\end{table}
+
+Then each for each letter of the plain text $m$, $m =R_mC_m$ where $R,C$ are the row and column letter where $m$ appears respectively.
+For example 's' would be mapped to FD.
+The key at this point need be unique and probably at least 5 characters long. A key like \textbf{passward} could be used but would need to be simplified to \textbf{paswrd} for the cipher to function.
+The modified plaintext letters are then placed by row across the grid \ref{passwordgrid}
+
+\begin{table}[ht]
+\centering
+\begin{tabular}{ c c c c c c }
+ P& A&S&W&R&D\\
+\hline
+$R_1$& $C_1$&$R_2$&$C_2$&$R_3$&$C_3 $\\
+$R_4$& $C_4$&$R_5$&$C_5$&$R_6$&$C_6 $\\
+$R_7$& $C_7$&$R_8$&$C_8$&$R_9$&$C_9 $\\
+\end{tabular}
+\label{passwordgrid}
+\end{table}
+
+Finally the columns are rearranged in alphabetic order and the message is read off by reading down the columns.
+
+\subsection{ Implementation }
+
+Included is a C++ implementation of the ADFGX cipher.
+The implemntation is fairly simple. 
+The indexing of characters into the grid is done with a precompiled list of all combinations with the integer representation of the letter as its index.
+
+The ADFGX encryption scheme is built by navigating to \textit{Cryptosuite/ADFGX/} and running \textbf{\$ make} this builds both \textit{encrypt} and \textit{decrypt}.
+
+\subsubsection{encrypt}
+
+Like all encryption schemes in this package the key is provided as a command line argument and plaintext is accepted through standard input and output through standard out. 
+
+When run, the program first validates the given key and creates the structure that will hold the cipher
+
+\begin{verbatim}
+struct column{
+   std::vector<char> c;
+   char label;
+};
+\end{verbatim}
+
+The program creates a list of these structures. This makes it easy to place and later rearrange the ciphertext.
+
+Then it begins reading \textbf{stdin} until \textbf{EOF} is reached.
+While reading the text is being convered into the $R_mC_m$ format and placed into a string.
+Then each character is placed one at a time into each column vector. The column vectors asorted and the ouput is written to \textbf{stdout} by printing each vector.
+
+\subsubsection{decrypt}
+
+Much the same way that \textit{encrypt} functions ciphertext is read from \textbf{stdin} and written to \textbf{stdout}.
+This program also begins by validating the given key and creating the \textbf{colunm} structures;
+
+After reading the ciphertext the program sorts the colunms and then calculates how many characters need to be put into every column along with which columns need to accept extra characters.
+Then the columns are reordered again back to their original state and the characters are read off row wise just as they are set in the above \textit{encrypt} program.
+Then for every two characters the program runs \textit{algorithm::find} on the original indexed array. The index it returns should be the original character when added to the integer value of 'a'.

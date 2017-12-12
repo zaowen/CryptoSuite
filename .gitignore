@@ -2,5 +2,10 @@
 *.log
 *.pdf
 *.swp
+*.lot
+*.toc
+*.lof
+*.out
+*.bbl
 googletest
 alice.txt

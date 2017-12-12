@@ -1,0 +1,44 @@
+% !TEX encoding = UTF-8 Unicode
+% !TEX root = DesignDocument.tex
+
+\documentclass{book}
+
+\input{docstyle.tex} % This sets the format.
+
+% Add your title page contents here 
+\title{{\color{SDColor3} \rule{\linewidth}{0.5mm}}\\[2mm] {\huge \bfseries \color{SDColor3} CSC412 Cryptography Portfolio }\\[-1mm] {\color{SDColor3}\rule{\linewidth}{0.5mm}} \\  \vfill
+{\LARGE \bfseries \color{SDColor4} Project Documentation and Narrative}\\  \vfill }
+\author{\color{SDColor3}  Zachary Owen}
+\date{\color{SDColor3} \today}
+
+
+\begin{document}
+
+\frontmatter
+
+\addcontentsline{toc}{chapter}{Title}
+\maketitle
+\tableofcontents
+\addcontentsline{toc}{chapter}{Contents}
+
+\listoffigures
+\addcontentsline{toc}{chapter}{List of Figures}
+\listoftables
+\addcontentsline{toc}{chapter}{List of Tables}
+
+%\listofalgorithms
+%\addcontentsline{toc}{chapter}{List of Algorithms}
+
+\mainmatter
+
+\input{overview.tex}
+\input{classic.tex}
+\input{basicNumberTheory.tex}
+\input{DES.tex}
+\input{RSA.tex}
+
+\appendix
+
+\backmatter
+
+\end{document}

@@ -118,7 +118,7 @@ namespace {
       mpz_init( a );
       mpz_set_ui(a, 8051);
 
-      crypto::factor_PollardRho( a, d);
+      crypto::factor_PollardRho( d, a);
       EXPECT_EQ( 97, mpz_get_si(d) );
    }
 
@@ -127,7 +127,7 @@ namespace {
       mpz_init( a );
       mpz_set_ui(a, 299);
 
-      crypto::factor_Pollardp1( a, d);
+      crypto::factor_Pollardp1( d, a);
       EXPECT_EQ( 13, mpz_get_si(d) );
    }
 

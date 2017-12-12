@@ -48,6 +48,8 @@ int main( int argc, char* argv[]){
       return -1;
    }
 
+   fclose(keyfile);
+
    mpz_t m ,c;
 
    mpz_inits(m,c,NULL);
@@ -58,7 +60,7 @@ int main( int argc, char* argv[]){
    while( result ){
       encrypt(m,c,e,n,k,ptr);
       mpz_out_str( stdout,16, c );
-      printf("\n");
+      fprintf( stdout, "\n");
       result = fread( ptr , 1, k/8 , stdin);
    }
 }

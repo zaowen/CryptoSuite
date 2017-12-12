@@ -1,0 +1,87 @@
+
+% !TEX root = DesignDocument.tex
+
+\chapter{RSA (Rivest-Shamir-Adleman)}
+
+RSA is a public key cryptosystem which allows for asymmetric key encryption.
+RSA uses large primes to create a system in which a person can publish public key
+that consists of an encryption exponent and a modulus.
+With these any person can send a message that only the owner of the private key will be able to decrypt. 
+
+\subsection{Implementation}
+This package contains an implementation of RSA in 3 convenient programs.
+To build this packages RSA implementation navigate to \textit{Cryptosuite/RSA/} and fun \textbf{make}, this will create \textit{keygen}, \textit{ encrypt}, and \textit{decrypt}.
+
+\begin{verbatim}
+$ ./keygen 2048 > keyfile
+$ ./keygen 2041 > keyfile
+   Keysize must be divisible by 8 and greater than 512
+$ ./encrypt keyfile < plaintext > ciphertext
+$ ./decrypt keyfile < ciphertext
+\end{verbatim}
+
+\section{ Key Generation}
+
+This implementation of  RSA allows for variable key size so long as size of the key is greater than 512. This restriction is due to how $e$ is created. Which will be discused later.
+
+The keys for this implementaion of RSA is quite standard when viewing from a high level.
+First two primes $p$ and $q$ are chosen based on user specifications on keysize. Then an $e$ is chosen with $gcd(e,(p-1)(q-1)) = 1$. 
+Then the program finds the modular inverse of $e$ such that $de \equiv \pmod{(p-1)(q-1)} $.
+The program then creates a keyfile in the format,
+\begin{verbatim}
+KEYSIZE
+PUBLICKEY
+ENCRYPTION_MODULUS
+PRIVATEKEY
+\end{verbatim}
+and writes it to standard out.
+
+\subsection{Implementation}
+For the most part this is standard deterministic simple math, except for choosing $e$.
+For this implementation I chose to use a standard value of $65537 = 2^{16} +1$.
+This saves the time of having to look around for an $e$ that is relatively prime with $(p-1)(q-1)$.
+During my research for this project i found that an $e$ with short bit-length and a small Hamming weight results in a more efficient encryption and that 65537 was a common choice. 
+Additionally this $e$ is prime, meaning that there is less of a chance that $(p-1)(q-1)|e$
+
+It is important to note that both the public key and private key are output on the same stream. 
+Separation of these values is not considered.
+The values for the public key, encryption modulus and private key are printed as base-16 hexadecimal strings.
+
+\section{ Encryption }
+
+Encryption is performed as it is stated in the algorithm, taking at most keysize bits of message interpreted as an integer and raised to the power of the public key mod the encryption modulus.
+
+\subsection{Implementation}
+
+The program for encrypting text begins by making sure the user has provided the program with a key file and that it holds valid data.
+This data validation only goes as far as making sure that the keysize is at least a number, and then that the public key and modulus are at least interpretable as base-16 hexadecimal numbers. 
+Other than these factors the keyfile is assumed to be correct.
+
+After parsing the key file, the program begins to read from \textbf{stdin}. 
+This read is buffered and attempts to read a number of bytes equal to the keysize divided by eight.
+This is why the keysize needs to be divisble by eight, so sub-char parsing need not be done.
+The received buffer is then directly placed into a GMP integer and raised to the power of the Public key.
+The resultant integer is written to \textbf{stdout} as a hexadecimal string followed by a new line.
+The new line is important during decryption as the implementation will detail.
+
+This process continues until an \textbf{EOF} is reached at which point the program exits.
+
+
+\section{ Decryption }
+
+Decryption is also performed in a rather standard form. Taking in ciphertext of keysize bits interpreted as an integer raised to the decryption exponent which yields the message.
+
+\subsection{Implementation}
+
+The program for encrypting text begins by making sure the user has provided the program with a key file and that it holds valid data.
+This data validation only goes as far as making sure that the keysize is at least a number, and then that the private key is at least interpretable as base-16 hexadecimal numbers. 
+Other than these factors the keyfile is assumed to be correct.
+
+
+After parsing the key file, the program begins to read from \textbf{stdin}. 
+
+The program reads line by line for input that can be interpreted as a hexadecimal string.
+That string is imported into a GMP integer and raised to the power of the decryption exponent which yields the plaintext as an integer.
+The resultant integer is exported to a buffer using \textbf{mpz\_export()} and written to \textbf{stdout}.
+
+This process continues until an \textbf{EOF} is reached at which point the program exits.

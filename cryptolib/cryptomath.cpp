@@ -125,6 +125,9 @@ namespace crypto
          if( !_RAND_INIT_ )
             initRand();
 
+         if( mpz_cmp_ui(n, 2) == 0 )
+            return true;
+
          if( mpz_divisible_ui_p(n, 2) != 0 )
             return false;
 
@@ -246,7 +249,7 @@ namespace crypto
       }
 
    bool
-      factor_Pollardp1( mpz_t n , mpz_t g)
+      factor_Pollardp1( mpz_t g , mpz_t n)
       {
          mpz_t M,b,a,B,m;
          std::vector<size_t> p;
@@ -287,7 +290,7 @@ namespace crypto
 
 
    bool
-      factor_PollardRho( mpz_t n, mpz_t d)
+      factor_PollardRho( mpz_t d, mpz_t n)
       {
          mpz_t x, y,rop;
          mpz_inits( x, y, rop, d,NULL);
@@ -518,10 +521,17 @@ namespace crypto
 
          while( i != p.end())
          {
-            mpz_powm_ui( rop, m, *(i++), n);
-            if( mpz_cmp_ui( rop, 1 ) == 0 )
+            if( mpz_divisible_ui_p(phi, *i) != 0)
             {
-               return false;
+               mpz_powm_ui( rop, m, *(i++), n);
+               if( mpz_cmp_ui( rop, 1 ) == 0 )
+               {
+                  return false;
+               }
+            }
+            else
+            {
+               i++;
             }
 
          }
@@ -529,4 +539,4 @@ namespace crypto
          return true;
 
       }
-}
+      }
