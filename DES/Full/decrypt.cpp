@@ -10,13 +10,12 @@ int main( int argc, char* argv[] )
    }
 
    uint64_t key = DES::getKey( argv[1] );
-   key = 0x133457799BBCDFF1;
-
    uint64_t buff = 0;
    uint64_t cb;
 
    size_t result = fread( &buff , 16, 1 , stdin);
 
+   fprintf( stderr, "Cyphertext:%llX\n", buff);
    while(result == 1)
    {
 
@@ -28,5 +27,6 @@ int main( int argc, char* argv[] )
       result = fread( &buff , 16 , 1 , stdin);
    }
 
+   fprintf( stderr, "Plaintext:%llX\n", cb);
 
 }

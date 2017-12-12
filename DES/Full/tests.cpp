@@ -13,6 +13,17 @@ namespace {
       k = DES::permute(k,DES::IPinv,64);
       EXPECT_EQ( k , j);
    }
+
+   TEST( PERMUTE2Test, func ) {
+      uint64_t m = 0x0200000000000040;
+      uint64_t k;
+      uint64_t d = 0x8000000000000001 ;
+
+      k = DES::permute(m,DES::IP,64);
+
+      EXPECT_EQ( k,d  );
+   }
+
    TEST( SBEXPANDTest, func ) {
       uint64_t k = 0x420C41461C8;
       uint8_t b[8] = {0};
@@ -22,6 +33,18 @@ namespace {
       {
          EXPECT_EQ( i, b[i-1]);
       }
+   }
+
+   TEST( CBCOLLAPSETest, func ) {
+      uint64_t k = 0x420C41461C8;
+      uint64_t c;
+      uint8_t b[8] = {0};
+
+      DES::sb_expand(k,b);
+      c = DES::cb_collapse(b);
+
+      EXPECT_EQ( 0x17E2F76, c);
+
    }
 
    TEST( SBOX1Test, func ) {
