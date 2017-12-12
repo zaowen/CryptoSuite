@@ -22,9 +22,9 @@ $ ./decrypt keyfile < ciphertext
 
 \section{ Key Generation}
 
-This implementation of  RSA allows for variable key size so long as size of the key is greater than 512. This restriction is due to how $e$ is created. Which will be discused later.
+This implementation of  RSA allows for variable key size so long as size of the key is greater than 512. This restriction is due to how $e$ is created. Which will be discussed later.
 
-The keys for this implementaion of RSA is quite standard when viewing from a high level.
+The keys for this implementation of RSA is quite standard when viewing from a high level.
 First two primes $p$ and $q$ are chosen based on user specifications on keysize. Then an $e$ is chosen with $gcd(e,(p-1)(q-1)) = 1$. 
 Then the program finds the modular inverse of $e$ such that $de \equiv \pmod{(p-1)(q-1)} $.
 The program then creates a keyfile in the format,
@@ -59,7 +59,7 @@ Other than these factors the keyfile is assumed to be correct.
 
 After parsing the key file, the program begins to read from \textbf{stdin}. 
 This read is buffered and attempts to read a number of bytes equal to the keysize divided by eight.
-This is why the keysize needs to be divisble by eight, so sub-char parsing need not be done.
+This is why the keysize needs to be divisible by eight, so sub-char parsing need not be done.
 The received buffer is then directly placed into a GMP integer and raised to the power of the Public key.
 The resultant integer is written to \textbf{stdout} as a hexadecimal string followed by a new line.
 The new line is important during decryption as the implementation will detail.

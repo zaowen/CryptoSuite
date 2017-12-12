@@ -10,14 +10,14 @@ This library takes advantage of the GMP (GNU Multi-Precision library) for arbitr
 GMP provides many helpful functions to cryptographic programs. 
 Some of them has be reimplemented here, most however are just useful functions.
 
-Since GMP integers are represened by pointers to structures of memory there are almost no valued functions in this library.
+Since GMP integers are represented by pointers to structures of memory there are almost no valued functions in this library.
 Return values are almost always returned as the first argument.
 
 Since most functions are implemented fully with GMP integers most of them will function with numbers as big as your computer can hold.
 Whether or not the functions will finish is up to your own patience and contemplation on the halting problem.
 However some are not implemented with GMP for various reasons.
 These functions will be pointed out and reasons given as to why they were not implemented with GMP.
-Bounds will also be given for non-GMP funtions since no bounds checking is done by the libary.
+Bounds will also be given for non-GMP functions since no bounds checking is done by the libary.
 
 \section{Generic Function}
 \subsection{Greatest Common Divisor} 
@@ -25,9 +25,9 @@ Bounds will also be given for non-GMP funtions since no bounds checking is done 
 gcd( mpz_t g, mpz_t a, mpz_t b)
 \end{verbatim}
 
-Simple reimpementation of Eulers Greatest common divisor function.
-There are actually two GCD functions in the libary one that annilates the arguments and one that does not.
-The one that does not simply creates copies of the arugments and passes them to the ones that do.
+Simple reimplementation of Eulers Greatest common divisor function.
+There are actually two GCD functions in the library one that annihilates the arguments and one that does not.
+The one that does not simply creates copies of the arguments and passes them to the ones that do.
 Finds the Greatest Common Divisor between a and b.
 
 \subsection{Least Common Multiple }
@@ -43,7 +43,7 @@ extendedGCD( mpz_t d, mpz_t x, mpz_t y, mpz_t a, mpz_t b )
 \end{verbatim}
 Simple recursive implementation of Eulers extended Algorithm.
 This function, runs in a similar way to the regular GCD function. 
-However it runs recursively so that it can go back up the calculation and solve Diphontine Equations.
+However it runs recursively so that it can go back up the calculation and solve Diophantine Equations.
 $$d = ax + by$$
 
 The first three arguments are the return values. The final two are the inputs.
@@ -54,7 +54,7 @@ The first three arguments are the return values. The final two are the inputs.
 bool findModInverse( mpz_t x, mpz_t a, mpz_t n)
 \end{verbatim}
 This function finds solves the equation $1 = ax \pmod n$. 
-It does this  by solving the Diaphontine equation $d = ax + by$ and then checking if $d = 1$. 
+It does this  by solving the Diophantine equation $d = ax + by$ and then checking if $d = 1$. 
 If it does not the function returns false.
 
 \subsection{Eulers Totent Function}
@@ -74,10 +74,10 @@ Very simply counts up from 1 checking each number for relative primality.
 bool is_Generator( mpz_t m, mpz_t n)
 \end{verbatim}
 \textbf{ NON-GMP FUNCTION:}
-\textbf{Since this function uses the seive of Sunaram to generate primes } 
+\textbf{Since this function uses the seive of Sunadram to generate primes } 
 
 This function checks if a number $m$ is a primitive root $\mod n$.
-While there is no very efficent way to do this, the process can be simplified by using Eulers Totent Function.
+While there is no very efficient way to do this, the process can be simplified by using Eulers Totent Function.
 
 The function works by generating the prime factors of $P(\varphi(n)) = p_1,p_2 ... p_n $ and calculating $m^{\frac{\varphi(n)}{p_i}} \pmod n$.
 If this exponential is never equal to 1 then the number is a primitive root.
@@ -97,12 +97,12 @@ bool isPrime_Fermat( mpz_t n )
 \end{verbatim}
 
 This is a GMP implementaiton of Fermat's Primality Test.
-This is a probablistic test to determine primality.
+This is a probabilistic test to determine primality.
 It uses large numbers and Fermat's little theorem to determine if a number is prime.
-Fermat's little theorm states $a^{p-1} \equiv 1 \pmod p$, therefore checking a number of $a$ values for this equality can probablisticaly determine primality.
+Fermat's little theorem states $a^{p-1} \equiv 1 \pmod p$, therefore checking a number of $a$ values for this equality can probabilistically determine primality.
 
 The function begins by initializing GMP's random number generator and checking if the number is divisible by 2.
-This check is necessary due to GMP implementation modualar exponentiation requiring odd modular residue classes.
+This check is necessary due to GMP implementation modular exponentiation requiring odd modular residue classes.
 The function then calls the actual function which functions recursively with a counter that instructs how many factors to try.
 The default is 5 although this function can be called directly if more are desired.
 
@@ -112,7 +112,7 @@ The default is 5 although this function can be called directly if more are desir
 random_prime( mpz_t p , int n)
 \end{verbatim}
 
-This fucntion returns a prime number between $2^n -1$ and $2^{n+1}-1$.
+This function returns a prime number between $2^n -1$ and $2^{n+1}-1$.
 This is accomplished by generating a number between the bounds and checking if its prime.
 If it is not 2 is added to the number and the check is performed again.
 
@@ -121,14 +121,14 @@ If it is not 2 is added to the number and the check is performed again.
 Sundaram( size_t n, std::vector<size_t> p)
 \end{verbatim}
 \textbf{ NON-GMP FUNCTION:}
-\textbf{Since this is a Seive and values must be represented in an array there was no reason to make this function GMP} 
+\textbf{Since this is a Sieve and values must be represented in an array there was no reason to make this function GMP} 
 
-The Sieve of Sundaram is an improvment on the Sieve of Eratosthenes as it does not concider even numbers.
-The Seive works by making a list of all numbers up to and including $n$ and then crossing out all the numbers of the form
+The Sieve of Sundaram is an improvement on the Sieve of Eratosthenes as it does not consider even numbers.
+The Sieve works by making a list of all numbers up to and including $n$ and then crossing out all the numbers of the form
 $i + j + 2ji = m$.
 Then all remaining numbers are doubled and incremented.
 
-This seive works like Eratosthenes, but since every number is doubled and incremented every number to start is of the form $2n +1$.
+This sieve works like Eratosthenes, but since every number is doubled and incremented every number to start is of the form $2n +1$.
 We can prove that all $m$ are composite by:
 \begin{align*}
 q &= 2(i+j+2ij)+1\\
@@ -156,7 +156,7 @@ bool factor_PollardRho( mpz_t d, mpz_t n)
 This function finds a factor $d$ of the number $n$... Sometimes.
 
 The function uses the cyclic nature of applying the output of a polynomial to itself in a modular system.
-The fuction performs the operation $x_{k} = g(x_{k-1})$  and $y_{k} \pmod n  = g(g(x_{k-1}))$ repeatedly.
+The function performs the operation $x_{k} = g(x_{k-1})$  and $y_{k} \pmod n  = g(g(x_{k-1}))$ repeatedly.
 Since this sequence must repeat eventually there will be a time when $x_k \equiv y_k \pmod n$.
 This is known as Floyd's cycle finding algorithm.
 
@@ -174,8 +174,8 @@ In the case of failure another function $g(x)$ could be tried, however this impl
 bool factor_Pollardp1( mpz_t g, mpz_t n )
 \end{verbatim}
 \textbf{ NON-GMP FUNCTION:}
-\textbf{ The Seive of Sundaram is used to generate the primes under the smoothness bound. Since Sundaram is non-GMP this is as well.} 
-{\bf However since the implemented choice for smoothness bound is the third root of the $n$ this fucntion can handle values up to:
+\textbf{ The Sieve of Sundaram is used to generate the primes under the smoothness bound. Since Sundaram is non-GMP this is as well.} 
+{\bf However since the implemented choice for smoothness bound is the third root of the $n$ this function can handle values up to:
 \begin{align*}
 (2^{64})^3 &= 6277101735386680763835789423207666416102355444464034512896 \\
 &= 6.2 * 10^{57}\\
@@ -185,23 +185,23 @@ bool factor_Pollardp1( mpz_t g, mpz_t n )
 
 Pollard's $p-1$ algorithm is an integer factoring algorithm that uses Fermat's little theorem as it's base.
 The algorithm works by first generating a \textbf{smoothness bound} for the number $n$. 
-A \textbf{smooth} number is one whose prime factorizaion only contains "small" primes.
+A \textbf{smooth} number is one whose prime factorization only contains "small" primes.
 The \textbf{smoothness bound} is a guess at about where we want to search for factors of $n$.
 
 Since for coprime $a$ and $p$ $a^{M(p-1)} \equiv 1 mod p$ by Fermat, we know that for this huge number $x = a^{M(P)}$, $gcd(x-1, n)$ will be a factor of $n$.
 
 The main goal of this algorithm is to find $M(p-1)$.
 Since we are assuming $n$ to be smooth, we can find the product of all $m_1,m_2...m_n$, under the smoothness bound and take that number to be $M$.
-Since there may be multiple of any given factor and modular expoenetiation is comparitvely cheap the actual product for each $m$ is $m_i^k < n$ for the greatest $k$.
+Since there may be multiple of any given factor and modular exponentiation is comparatively cheap the actual product for each $m$ is $m_i^k < n$ for the greatest $k$.
 
-This algorithm is good at finding smooth factor but begins to fail at larger ones due to how the smoothenss bound is chosen.
+This algorithm is good at finding smooth factor but begins to fail at larger ones due to how the smoothness bound is chosen.
 One improvement that could be made is if a factor search fails, to increase the smoothness bound and try again.
 This is not done for speed's sake.
 
 \subsubsection{Choosing smoothness bound}
 Smoothness bound should not be larger than $\sqrt{n}$ but for this package the smoothness bound is chosen as the third root of n.
 This is for additional speed and probability.
-By Dixions theorem we know that the probibily of the largest factor of a number being less than $(p-1)^{\\varepsilon}$ is about $\varepsilon^{-\varepsilon}$.
+By Dixion's theorem we know that the probability of the largest factor of a number being less than $(p-1)^{\\varepsilon}$ is about $\varepsilon^{-\varepsilon}$.
 So for the third root, we have around a 60\% chance of finding a factor.
 
 \subsection{Shanks Square Algorithm}
@@ -211,7 +211,7 @@ bool factor_Shank( mpz_t r, mpz_t N)
 \textbf{ NON-GMP FUNCTION:}
 \textbf{Uses a precompiled list of $k$ values which is limited.} 
 
-Shanks square forms factorizaion algorithm functions by attempting to find $N = x^2 - y^2$, with $x^2 \equiv y^2 \pmod N$.
+Shanks square forms factorization algorithm functions by attempting to find $N = x^2 - y^2$, with $x^2 \equiv y^2 \pmod N$.
 While it does not guarantee factorization it does provide a good chance that either $(x-y)$ or $(x+y)$ contains a factor of $N$
 
 
@@ -224,7 +224,7 @@ These tests can be built by navigating to \textit{Cryptosuite/cryptolib/} and ru
 Run the tests by running \textbf{cryptolib\_unittest}.
 This Cryptosuite tests using Google's testing framework.
 This framework is not included with this package.
-However it can be aquired from \url{https://github.com/google/googletest} or running 
+However it can be acquired from \url{https://github.com/google/googletest} or running 
 \begin{center}
 \textbf{ \$ git clone https://github.com/google/googletest.git} 
 \end{center}

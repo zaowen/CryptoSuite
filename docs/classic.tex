@@ -6,13 +6,13 @@
 
 The Affine Cipher is an example of a simple shift cipher and one of the oldest examples of cryptography.
 The cipher is performed by transforming each character with the function $f(x) = \alpha x + \beta \pmod{26}$.
-Letters are represented as nubers taking each character in the plaintext as a number from 0 to 25, with $a$ being 0, and $z= 25$.
+Letters are represented as numbers taking each character in the plaintext as a number from 0 to 25, with $a$ being 0, and $z= 25$.
 
 The 'key' to this cipher is choosing $\alpha$ and $\beta$. It is also where a naive implementation of this cipher can fail.
-Since the modualar arithmetic system we are working in is not prime the affine cipher is not a feild. 
-This means that depending on our choice of $\alpha$ and $\beta$ ( or as it turns out just $\alpha$ ) we could end up with an ambigious cryptosystem.
+Since the modular arithmetic system we are working in is not prime the affine cipher is not a field. 
+This means that depending on our choice of $\alpha$ and $\beta$ ( or as it turns out just $\alpha$ ) we could end up with an ambiguous cryptosystem.
 For example for $\alpha = 13$ the letters n, p, l, t, and r all map to the same letter Making the message very difficult to recover.
-So for a funcitional affine system it is necessary that $f(x)$ be a one-to-one function. 
+So for a functional affine system it is necessary that $f(x)$ be a one-to-one function. 
 This can be done easily by checking that $gcd(\alpha , 26) = 1$, if this is true then $\frac{1}{\alpha}$ exists and is unique.
 
 \subsection{implementation}
@@ -25,20 +25,20 @@ Decryption is done much the same way except the transform arguments are reversed
 The Vigen\'ere Cipher is a simple cipher from the 16th century. 
 The way it functions is also rather simple.
 From a given keyword the value of the first letter of the plaintext is added to the value of the first letter of the key. 
-The value of the letter being its iteger representaion mod 26.
-This continues until the end of the key. At which point you start over with the begining of the key until the end of the plaintext.
+The value of the letter being its integer representation mod 26.
+This continues until the end of the key. At which point you start over with the beginning of the key until the end of the plaintext.
 The resultant representations of numbers mod 26 are then converted back into letters and sent as the ciphertext.
 
-Decyption is simple if you know the key. 
+Decryption is simple if you know the key. 
 Simply by undoing the operation of encryption by subtracting the value of each letter of the key mod 26 the plaintext is reaquired.
 
 \subsection{ Implementation}
 
 Included is a C++ implementation of the Vigen\'ere cipher.
-The implementation is much the same as it is decribed above.
+The implementation is much the same as it is decried above.
 The Vigen\'ere is built by navigating to \textit{Cryptosuite/vigenere} and running \textbf{make}. This builds \textit{attack}, \textit{decrypt} and \textit{encrypt}.
 
-\section{Frequency Calulator}
+\section{Frequency Calculator}
 The frequency calculator creates an array of 26 ints. It then reads from \textbf{stdin} until \textbf{EOF} is reached and then prints the frequencies.
 
 \section{Affine Cipher Attack}
@@ -52,14 +52,14 @@ From there the algebra is simple to find $\alpha$ and $\beta$.
 \section{Vigen\'ere Cipher Attacks}
 
 Attacks on Vigen\'ere are more subtle than Affine.
-Since each letter is offset by a diffrent ammount basic frequency analysis will ususally yeild garbage and will not give you the key.
+Since each letter is offset by a different amount basic frequency analysis will usually yield garbage and will not give you the key.
 instead the attack is performed in two steps
 
 \subsection{Find the key length}
 While not basic frequency analysis this method works on the same principle.
 The idea is that if the cipher text is placed next to itself plus some offset and then the letters are compared side by side, 
 the offset with the most sets of letters in common will be the key length.
-This is not freqency analysis but since we know that letters like 'e' and 't' are very common more matches will be found if the letters are mapped to the same place.
+This is not frequency analysis but since we know that letters like 'e' and 't' are very common more matches will be found if the letters are mapped to the same place.
 
 This works very well on all but very short ciphertexts.
 An interesting result is that for short keys, the side-by-side matching tends to suspect keylengths in multiples of the actual keylength.
@@ -78,14 +78,14 @@ These are odd use cases however and the attacks provided usually work.
 \subsection{ Implementation}
 
 Included is a C++ implementation of the Vigen\'ere cipher attack. 
-The implementation is much the same as it is decribed above.
+The implementation is much the same as it is described above.
 The Vigen\'ere attack is built by navigating to \textit{Cryptosuite/vigenere} and running \textbf{make}. This builds \textit{encrypt}, \textit{decrypt} and \textit{attack}.
 
 Running this program is as simple as running \textit{\$ ./attack < <ciphertext> }. The program will then print the guessed size of the key along with the guessed key.
 
 \section{ADFGX cipher}
 
-During the first World War two simmilar ciphers were used called playfair and ADFGX. 
+During the first World War two similar ciphers were used called playfair and ADFGX. 
 These ciphers worked by placing all possible letters into a grid that could then be used as a one-to-one function.
 The indexes of the letter to encrypt were then taken and scrambled in a way that is very difficult to undo without the key.
 Like vigen\'ere the key is a word or unique collection of letters.
@@ -143,7 +143,7 @@ Finally the columns are rearranged in alphabetic order and the message is read o
 \subsection{ Implementation }
 
 Included is a C++ implementation of the ADFGX cipher.
-The implemntation is fairly simple. 
+The implementation is fairly simple. 
 The indexing of characters into the grid is done with a precompiled list of all combinations with the integer representation of the letter as its index.
 
 The ADFGX encryption scheme is built by navigating to \textit{Cryptosuite/ADFGX/} and running \textbf{\$ make} this builds both \textit{encrypt} and \textit{decrypt}.
@@ -164,14 +164,14 @@ struct column{
 The program creates a list of these structures. This makes it easy to place and later rearrange the ciphertext.
 
 Then it begins reading \textbf{stdin} until \textbf{EOF} is reached.
-While reading the text is being convered into the $R_mC_m$ format and placed into a string.
-Then each character is placed one at a time into each column vector. The column vectors asorted and the ouput is written to \textbf{stdout} by printing each vector.
+While reading the text is being converted into the $R_mC_m$ format and placed into a string.
+Then each character is placed one at a time into each column vector. The column vectors are sorted and the output is written to \textbf{stdout} by printing each vector.
 
 \subsubsection{decrypt}
 
 Much the same way that \textit{encrypt} functions ciphertext is read from \textbf{stdin} and written to \textbf{stdout}.
-This program also begins by validating the given key and creating the \textbf{colunm} structures;
+This program also begins by validating the given key and creating the \textbf{column} structures;
 
-After reading the ciphertext the program sorts the colunms and then calculates how many characters need to be put into every column along with which columns need to accept extra characters.
+After reading the ciphertext the program sorts the columns and then calculates how many characters need to be put into every column along with which columns need to accept extra characters.
 Then the columns are reordered again back to their original state and the characters are read off row wise just as they are set in the above \textit{encrypt} program.
 Then for every two characters the program runs \textit{algorithm::find} on the original indexed array. The index it returns should be the original character when added to the integer value of 'a'.
